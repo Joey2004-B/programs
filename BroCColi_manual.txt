@@ -1,0 +1,2 @@
+====BROCCOLI SUBTITLE CREATOR MANUAL=======
+Step one: Open the video you want to add subtitles with.
