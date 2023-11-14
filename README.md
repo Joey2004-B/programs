@@ -1,8 +1,9 @@
 # programs
 Python programs that I made.
-Programs include:
  # Story Generator
  Not uploaded yet
+ - Randomly generated stories
+ - Gives the user opportunities to add to the story with input funcitons.
  # Subtitle Creator
  Not uploaded yet
  # CSV editor
