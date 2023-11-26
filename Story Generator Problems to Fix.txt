@@ -1,0 +1,27 @@
+Story Generator Problems to Fix
+
+To test: introduce_bad_guy(), location_specific(), new_mission()
+
+For every time that the input() function is used, make the prompts appear before writing a full paragraph, so that the paragraphs appear in one piece without being interrupted by the input prompts. Except for conversation(). {on use_item(), start at line 1256}
+
+Change the wording in the message in elevator() where someone tries to open the door.
+
+Fix a problem with newlines in fight(), also make it possible to put a death term in place of "was defeated."
+
+In good_guy_check(), one good guy was introduced, and the text suggested that there were more than one.
+
+In elevator(), if the good guys lose, add a sentence saying that the doors opened and the good guys came in.
+
+In lost(), it's possible to have many consecutive paragraphs start with "The good guys," replace the second and third and so on with "they."
+
+In conversation(), if someone asks a question at the end of the loop, let someone answer the question.
+
+in the natural_disaster() function, there is a loop in the thunderstorm part, and as soon as the good guys were safe, the loop should break.
+
+in kill_character(), make it possible to start a fight().
+
+change wording in convert_character().
+
+in list_vehicles(), use a dictionary to count them.
+
+make a new_place() function.
