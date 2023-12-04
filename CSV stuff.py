@@ -1,12 +1,16 @@
+#!/usr/bin/env python3
 import csv
 import os
 def ls():
+    """Lists the names of the files of the current working directory and the path to the current working directory."""
     contents = os.listdir(os.getcwd())
-    print("Directory: "+os.getcwd())
+    
     print("Total: "+str(len(contents)))
     contents = sorted(contents)
+    
     for x in contents:
         print(x)
+    print("Directory: "+os.getcwd())
 ##def by_dept_reader():
 ##    """Reads the by_department.csv file."""
 ##    with open("by_department.csv") as csvfile:
