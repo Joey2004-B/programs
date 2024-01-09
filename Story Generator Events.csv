@@ -1,0 +1,34 @@
+Event name,Section,In Opening,In closing,Finished
+is_plural,Special,---,---,Yes
+test_events,Special,---,---,Yes
+convert_character,Neutral,Yes,No,Yes
+kill_character,Neutral,No,Yes,Yes
+fight,Neutral,No,Yes,Yes
+introduce_bad_guy, Bad, Yes, No, Yes
+good_guy_check,Neutral,Yes,Yes,Yes
+find_goal,Special,---,---,Yes
+goto,Neutral,Yes,Yes,Yes
+introduce,Special,---,---,Yes
+print_inventory,Neutral,Yes,Yes,Yes
+list_vehicles,Neutral,Yes,Yes,Yes
+list_party,Neutral,Yes,Yes,Yes
+new_mission,Neutral,Yes,No,Yes
+location_specific,Neutral,No,No,Yes
+elevator,Neutral,No,Yes,Yes
+get_vehicle,Good,Yes,Yes,Yes
+get_tool,Good,Yes,Yes,Yes
+new_guy,Good,Yes,Yes,Yes
+goal_check, Good, No, Yes, Yes
+goal_resolve, Good, No, Yes, Yes
+use_item,Good,Yes,Yes,Yes
+destroy_vehicle,Bad,No,Yes,Yes
+hunger,Bad,Yes,Yes,Yes
+lose_item,Bad,Yes,Yes,Yes
+natural_disaster,Bad,No,Yes,Yes
+trapped,Bad,Yes,Yes,Yes
+lost,Bad,Yes,No,Yes
+pit,Bad,Yes,Yes,No
+Transform, Neutral, Yes, Yes, No
+conversation, Neutral, Yes, Yes, Yes
+bad_guys_base, Neutral, Yes, Yes, No
+confused, Bad, Yes, Yes, No

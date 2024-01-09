@@ -2,11 +2,36 @@ Story Generator Problems to Fix
 
 To test: introduce_bad_guy(), location_specific(), new_mission()
 
-For every time that the input() function is used, make the prompts appear before writing a full paragraph, so that the paragraphs appear in one piece without being interrupted by the input prompts. Except for conversation(). {on use_item(), start at line 1256}
+For every time that the input() function is used, make the prompts appear before writing a full paragraph, so that the paragraphs appear in one piece without being interrupted by the input prompts. Except for conversation(). {Look at the part with "There are no good guys left".}
+
+  Billie J. the Smart Ghost was sick with a serious illness. The sickness was so serious, he/she expired.
+(type in a name of a place.) Broccy's house
+Traceback (most recent call last):
+  File "/home/joey/Documents/programs/Story Generator.py", line 2416, in <module>
+    exec(event)
+  File "<string>", line 1, in <module>
+  File "/home/joey/Documents/programs/Story Generator.py", line 519, in goto
+    if not new_place in PlaceTypes:
+           ^^^^^^^^^
+NameError: name 'new_place' is not defined. Did you mean: 'NewPlace'? (FIXED)
+
+They got to Outer space by a(n) Van.
+
+Meanwhile, at the Open ocean, Creepy Carrot saw the good guys out the window.
+
+They were born in a desert.
+  They got there by a(n) Car.
+
+    The good guys found themselves at Somalia. However, they were still lost.
+  The good guys weren't lost anymore.
+
+  How come conversations are always over the phone?
+
+make a NewPlace() function.
+To test: introduce_bad_guy(), goto(), use_item(), goal_resolve(), natural_disaster(), trapped(), lost(), location_specific(), elevator()
 
 Change the wording in the message in elevator() where someone tries to open the door.
 
-Fix a problem with newlines in fight(), also make it possible to put a death term in place of "was defeated."
 
 In good_guy_check(), one good guy was introduced, and the text suggested that there were more than one.
 
@@ -24,4 +49,19 @@ change wording in convert_character().
 
 in list_vehicles(), use a dictionary to count them.
 
-make a new_place() function.
+
+When there is only one good guy, replace "Good guy" with the name of the good guy. (Maybe creating a function for that will help.)
+
+Make the fights shorter.
+
+Add a way to start a fight() in lost().
+
+Lose the phone part of conversation().
+
+(DONE) 2 buss
+
+They got there by Airplane, a(n) and a(n) Bicycle.
+
+if in-cage, you can't go anywhere.
+
+
