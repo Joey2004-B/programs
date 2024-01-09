@@ -1,5 +1,5 @@
-# PYTHON SCRIPTS!
-This repository is my first GitHub repository. This one contains Python programs that I made. They all work well on Windows (I use that OS.), and maybe Linux and MacOS (unless otherwise noted).
+# SCRIPTS!
+This *repository* is my __first GitHub repository.__ This one contains Python programs (This repository may include some Bash scripts) that I made. They all work well on Windows (I use that OS.), and maybe Linux(This one, I also use, and I use it often.) and MacOS (I never used it) (unless otherwise noted).
 Feel free to review any of the code in this repository. Reviews are appreciated. They help code get better.
 ## Word counter
  >Uploaded!
@@ -35,7 +35,7 @@ You might have to make some changes to the file before running it for the first 
  - It sometimes give the user opportunities to fill in some blanks with some input prompts.
 
 Before I add this script to my repository, I have to fix these bugs. Please let me know if you want to fix them.
-- [ ] For every time that the `input()` function or any function that calls that function, have any `print()` functions called after all the `input()` functions, except for the `conversation()` function.
+- [x] For every time that the `input()` function or any function that calls that function, have any `print()` functions called after all the `input()` functions, except for the `conversation()` function.
 - [ ] Change the wording in some of the functions defined in it. (like in `elevator()`, and `convert_character()`)
 - [ ] Fix a problem with blank lines being added in the `fight()`. I want all the paragraphs the code outputs to start with two spaces and no newline characters until the next paragraph.
 - [ ] Make it possible to print a random expression meaning that someone died in `fight()`
@@ -46,18 +46,19 @@ Before I add this script to my repository, I have to fix these bugs. Please let 
 - [ ] In `natural_disaster()`, there is a loop in the thunderstorm part, and as soon as the good guys were safe, the loop should break.
 - [ ] in `kill_character()`, make it possible to start a fight by calling the `fight()` function.
 - [ ] In `list_vehicles()`, use a dictionary to count them.
-- [ ] Make a `new_place()` function where it changes the place the good guys are at in the story into a random place, or let the user type in the place.
+- [x] Make a `new_place()` function where it changes the place the good guys are at in the story into a random place, or let the user type in the place.
  ## Subtitle Creator
- >Not uploaded yet
+ >Uploaded!
  - Creates SRT subtitles
  - You can write transcripts of videos in .txt files and import them into the program.
  - Has options to capitalize and uncapitalize text inside parentheses or square brackets.
  - Also has options to randomly choose what brackets would be used and whether the text inside is capitalized or not.
  - Window is always on top of the video player window if you are watching the video you want to add subtitles to maximized.
  ## CSV editor
- >Not uploaded yet
+ >Uploaded!
  This is a command-line interface tool that creates and edits CSV files.
  You type in commands to use it. It displays the contents of the CSV file you're working on in a neat table.
  
  ## And maybe more.
-example.py file (I had to make it for doing a QwikLab exercise on a course on using Git and GitHub. I might have to delete it some day).
+- example.py file (I had to make it for doing a QwikLab exercise on a course on using Git and GitHub. I might have to delete it some day).
+- *Council at Daybreak* Proclaimer (This is a Bash script. I recommend [am I spelling this word right?] using Linux for this. You'll need to install the `speach-dispatcher` package as well as having the *Council at Daybreak* card game.)
