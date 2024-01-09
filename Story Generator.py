@@ -3,6 +3,7 @@ import random # Use random.choice(list_name) to randomly pick from lists. Exampl
 # Use random.randint(low, high) with if statements to "roll the dice." Example: random.randint(0, 10)
 # Material for story
 import re
+import subprocess
 names = ["Aurora", "Ahmed", "Audrey", "Arden", "Andrea", "Augusta", "Augustus", "Absalom", "Adash", "Abraham", "Abby", "Alex", "Al", "Allen", "Alice", "Allistair", "Aaron", "Amanda", "Alan", "Anthony", "Andy", "Andrew", "Antonio", "Annie", "Anne",
          "Benedict", "Britanni", "Bree", "Bob", "Ben", "Bailey", "Blake", "Blossom", "Benjamin", "Beatrice", "Bill", "Billie", "Billy", "Bobbie", "Broccy", "Bailey", "Bryan", "Brian", "Bista", "Benny",
          "Charlie", "Candy", "Cameron", "Cameron", "Chris", "Courtney", "Charles", "Camila", "Charlotte", "Cheryl", "Chloe", "Cola", "Cole",
@@ -83,6 +84,16 @@ goals = [] # Goals start with "Leave", "Take", "Destroy", "Visit",
 # "Meet" goals mean that you have to meet a good guy
 # Define events that might happen in the story.
 #Key events
+said = input("Should this generated story be said? (It only works in Linux systems with the speach-dispatcher package installed.) [y/n]")
+def storyprint(text, strend):
+    global said
+    print(text, end=strend)
+    if said.lower().startswith("y"):
+            subprocess.run(["spd-say", text])
+            waittime = len(text)//10+1
+            #print()
+            subprocess.run(["sleep", str(waittime)])
+#storyprint("Does this work?\nOne way to find out...", "\n")
 def NewPlace():
     global place
     global Places
@@ -110,6 +121,19 @@ def vehicle_check():
             while x in inventory:
                 active_vehicles.append(x)
                 inventory.remove(x)
+def Animal():
+        global good_guys
+        global Animals
+        if random.randint(0,1) == 1:
+            animal = input("(What animal did the good guy(s) see?)")
+            if not animal in Animals:
+                Animals.append(animal)
+        else:
+            animal = random.choice(Animals)
+        storyprint("  The good guy"+is_plural(good_guys)+" saw a(n) "+animal + ".", " ")
+        if random.randint(0, 1) == 1:
+            storyprint("They followed it.", " ")
+        storyprint("Then, it disappeared.", "\n")
 def is_plural(lyst):
     """This is used when a group of characters is mentioned in the story. This prevents the story from saying "good guys" when there's really 1 good guy. The lyst parameter in this function takes lists."""
     if len(lyst) > 1:
@@ -135,7 +159,7 @@ def test_events():
     for x in range(10):
         active_vehicles.append(random.choice(Vehicles))
     #to_test = [ "conversation()"]
-    to_test = ["NewPlace()", "location_specific()", "use_item()", "goto()"]
+    to_test = ["fight(False)", "NewPlace()", "location_specific()", "use_item()", "goto()"]
     print("######TEST######")
     # Test location_specific() and use_item() on separate runs.
     # To Test:
@@ -183,41 +207,41 @@ def convert_character(in_closing):
         startParty.remove(convertee)
         if startParty == bad_guys:
             if endParty == good_guys:
-                print(convertee + " soon learned that what evil he/she was doing was wrong. So he/she joined the good guy"+is_plural(good_guys)+".")
+                storyprint(convertee + " soon learned that what evil he/she was doing was wrong. So he/she joined the good guy"+is_plural(good_guys)+".", "\n")
             elif endParty == inactive_bad_guys:
-                print(convertee + " retreated.")
+                storyprint(convertee + " retreated.", "\n")
             else:
-                print(convertee + " made a hasty retreat. Soon after he/she retreated, he/she turned his/her back on doing evil deeds.")
+                storyprint(convertee + " made a hasty retreat. Soon after he/she retreated, he/she turned his/her back on doing evil deeds.", "\n")
         elif startParty == good_guys:
             if endParty == bad_guys:
                 if len(good_guys) > 0:
-                    print(convertee + " did not want to do what the other good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" doing, so he/she turned bad.")
+                    storyprint(convertee + " did not want to do what the other good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" doing, so he/she turned bad.", "\n")
                 else:
-                    print(convertee + ", the last good guy turned evil.")
+                    storyprint(convertee + ", the last good guy turned evil.", "\n")
             elif endParty == inactive_good_guys:
                 if len(good_guys) > 0:
-                    print(convertee + " started puffing and said, \"I need a break. You guy"+is_plural(good_guys)+" can go on without me. I'll catch up with you sometime.\" And so, the good guy"+is_plural(good_guys)+" continued without him/her.")
+                    storyprint(convertee + " started puffing and said, \"I need a break. You guy"+is_plural(good_guys)+" can go on without me. I'll catch up with you sometime.\" And so, the good guy"+is_plural(good_guys)+" continued without him/her.", "\n")
                 else:
-                    print(convertee + " just left and went to "+random.choice(Places)+". It's more peaceful there.")
+                    storyprint(convertee + " just left and went to "+random.choice(Places)+". It's more peaceful there.", "\n")
             else:
                 if len(good_guys) > 0:
-                    print(convertee + " thought the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" a little bit weird in their thinking, so he/she turned his/her back on them and left.")
+                    storyprint(convertee + " thought the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" a little bit weird in their thinking, so he/she turned his/her back on them and left.", "\n")
                 else:
-                    print(convertee + " thought that doing good is worth nothing. So he/she left and turned bad.")
+                    storyprint(convertee + " thought that doing good is worth nothing. So he/she left and turned bad.", "\n")
         elif startParty == inactive_good_guys:
             if endParty == inactive_bad_guys:
-                print("Meanwhile, " + convertee + " had an idea. He/she would go against the good guy"+is_plural(good_guys)+" because he/she thought that they "+were_was(good_guys)+" being silly. And so, he/she turned bad.")
+                storyprint("Meanwhile, " + convertee + " had an idea. He/she would go against the good guy"+is_plural(good_guys)+" because he/she thought that they "+were_was(good_guys)+" being silly. And so, he/she turned bad.", "\n")
             elif endParty == good_guys:
-                print("The good guy"+is_plural(good_guys)+" suddenly ran across good old " + convertee + ". What a surprise!")
+                storyprint("The good guy"+is_plural(good_guys)+" suddenly ran across good old " + convertee + ". What a surprise!", "\n")
             else:
-                print("Suddenly, mean old " + convertee + " appeared with an angry face. Wait, WHAT?! he/she TURNED BAD?!?")
+                storyprint("Suddenly, mean old " + convertee + " appeared with an angry face. Wait, WHAT?! he/she TURNED BAD?!?", "\n")
         else:
             if endParty == inactive_good_guys:
-                print("Meanwhile, " + convertee + " thought about what he/she was doing. \"You know what?\" he thought out loud. \"I think those good guy"+is_plural(good_guys)+" got it right.\" And so, he/she turned good.")
+                storyprint("Meanwhile, " + convertee + " thought about what he/she was doing. \"You know what?\" he thought out loud. \"I think those good guy"+is_plural(good_guys)+" got it right.\" And so, he/she turned good.", "\n")
             elif endParty == good_guys:
-                print(convertee + " showed up. The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" alarmed. \"I'm sorry for being a bad guy. I know, I'm a stinkbrain.\" " + convertee + " said. \"I wanna join you now.\" And so, he/she was with the good guy"+is_plural(good_guys)+".")
+                storyprint(convertee + " showed up. The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" alarmed. \"I'm sorry for being a bad guy. I know, I'm a stinkbrain.\" " + convertee + " said. \"I wanna join you now.\" And so, he/she was with the good guy"+is_plural(good_guys)+".", "\n")
             else:
-                print("Suddenly, " + convertee + " emerged. The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" ready for battle.")
+                storyprint("Suddenly, " + convertee + " emerged. The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" ready for battle.", "\n")
 def conversation():
     """Makes the characters talk"""
     global good_guys
@@ -233,41 +257,35 @@ def conversation():
         print(" ", end=" ")
         overPhone = False
         if random.randint(0,3) == 1 and len(bad_guys) > 0:
-            print(random.choice(bad_guys), end=" ")
+            storyprint(random.choice(bad_guys), " ")
             overPhone = False
             party = "bad"
         elif random.randint(0,2) == 1 and len(bad_guys) > 0  and len(inactive_bad_guys) > 0:
-            print(random.choice(inactive_bad_guys), end=" ")
+            storyprint(random.choice(inactive_bad_guys), " ")
             overPhone = True
             party = "bad"
         elif random.randint(0,1) == 1 and len(inactive_good_guys) > 0  and "Cell phone" in inventory:
-            print(random.choice(inactive_good_guys), end=" ")
+            storyprint(random.choice(inactive_good_guys), " ")
             overPhone = True
             party = "good"
         else:
-            print(random.choice(good_guys), end=" ")
+            storyprint(random.choice(good_guys), " ")
             overPhone = False
             party = "good"
         if askReply == True:
-                    print("replied", end='')
+                    storyprint("replied", '')
         else:
-                    print("said", end='')
-        if overPhone == True and party == "good" and askReply == False:
-            print(" to "+random.choice(good_guys),end="")
-        elif overPhone == True and party == "bad" and askReply == False:
-            print(" to "+random.choice(bad_guys),end="")
+                    storyprint("said", '')
         saying = input(", \" (what did he/she say?)")
         if re.search(r'"$', saying):
             saying = re.sub(r'"$', "", saying)
-        print(saying+'"',end=" ")
-        if overPhone == True:
-            print("over the phone.")
-        else:
-            print("")
+        storyprint(saying+'"', "\n")
         if re.search(r"\?$", saying):
             askReply = True
         else:
             askReply = False
+        if x == rep - 1 and askReply == True:
+            rep += 1
 def kill_character():
         """Kills off a character"""
         global good_guys
@@ -298,25 +316,25 @@ def kill_character():
                     else:
                         weapon = "bare hands"
                     murderer = random.choice(good_guys)
-                print(murderer + " killed " + victim + " with (a) " + weapon)
+                storyprint(murderer + " killed " + victim + " with (a) " + weapon, "\n")
             else:
                 r = random.randint(0, 3)
                 if r == 1:
-                    print(victim + " was satisfied with the length of his/her days. He/she "+random.choice(death_terms)+" of old age.")
+                    storyprint(victim + " was satisfied with the length of his/her days. He/she "+random.choice(death_terms)+" of old age.", "\n")
                 elif r == 2:
-                    print(victim + " was sick with a serious illness.", end=" ")
+                    storyprint(victim + " was sick with a serious illness.", " ")
                     i = random.randint(0, 1)
                     if i == 1:
-                        print("He/she got injected. his/her friends hoped that he/she would be alright, but he/she "+ random.choice(death_terms) + ".")
+                        storyprint("He/she got an injection. his/her friends hoped that he/she would be alright, but he/she "+ random.choice(death_terms) + ".", "\n")
                     else:
-                        print("The sickness was so serious, he/she "+ random.choice(death_terms) +".")
+                        storyprint("The sickness was so serious, he/she "+ random.choice(death_terms) +".", "\n")
                 elif r == 3:
-                    print(victim+" had a fatal fall. he/she "+ random.choice(death_terms) + " from it.")
+                    storyprint(victim+" had a fatal fall. he/she "+ random.choice(death_terms) + " from it.", "\n")
                 else:
-                    print(victim+" was poisoned", end="")
+                    storyprint(victim+" was poisoned", "")
                     if len(bad_guys) > 0:
-                        print(" by "+ random.choice(bad_guys), end="")
-                    print(". And so, "+victim+" "+random.choice(death_terms)+".")
+                        storyprint(" by "+ random.choice(bad_guys), "")
+                    storyprint(". And so, "+victim+" "+random.choice(death_terms)+".", "\n")
 def fight(inClosing):
     """If there are active good guys and active bad guys, then it starts a fight between good guys and bad guys. If the inClosing parameter is True, it's a fight to the death."""
     global bad_guys
@@ -329,7 +347,7 @@ def fight(inClosing):
     good_guy_check()
     turn = 0
     if len(good_guys) > 0 and len(bad_guys) > 0:
-        print("  The good guy"+is_plural(good_guys)+" and the bad guy"+is_plural(bad_guys)+" started a fight.")
+        storyprint("  The good guy"+is_plural(good_guys)+" and the bad guy"+is_plural(bad_guys)+" started a fight.", " ")
         while len(good_guys) > 0 and len(bad_guys) > 0:
                 print(" ",end=" ")
                 attacker = random.choice(good_guys)
@@ -340,24 +358,22 @@ def fight(inClosing):
                 else:
                     item = random.choice(inventory)
                 if good_turn < 2 and turn > 0 and inClosing == False:
-                    print("The good guy"+is_plural(good_guys)+" fled from battle.")
+                    storyprint("The good guy"+is_plural(good_guys)+" fled from battle.", "\n")
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
                     break
                 else:
-                    print(attacker + " attacked " + victim + " with " + item + ".", end=" ")
+                    storyprint(attacker + " attacked " + victim + " with " + item + ".", " ")
                     if random.randint(0,2) == 2:
-                        print(victim + " was defeated.",end="")
+                        storyprint(victim + " was defeated.","\n")
                         bad_guys.remove(victim)
                         if len(bad_guys) == 0:
-                            print("  The good guy"+is_plural(good_guys)+" won!")
+                            storyprint("  The good guy"+is_plural(good_guys)+" won!", "\n")
                             break
-                        else:
-                            print("")
                     elif random.randint(0,1) == 1:
-                        print(victim + " blocked the attack with a " + random.choice(Tools) + ".")
+                        storyprint(victim + " blocked the attack with a " + random.choice(Tools) + ".", "\n")
                     elif random.randint(0,1) == 0:
-                        print("Missed.")
+                        storyprint("Missed.", "\n")
                     else:
                         print("")
                 if len(good_guys) > 0 and len(bad_guys) > 0:
@@ -368,32 +384,30 @@ def fight(inClosing):
                     victim = random.choice(good_guys)
                     item = random.choice(Tools)
                     if bad_turn < 2 and turn > 0 and inClosing == False:
-                        print("The bad guy"+is_plural(bad_guys)+" fled from battle.")
+                        storyprint("The bad guy"+is_plural(bad_guys)+" fled from battle.", "\n")
                         inactive_bad_guys.extend(bad_guys)
                         bad_guys.clear()
                         break
                     else:
-                        print(attacker + " attacked " + victim + " with " + item + ".", end=" ")
+                        storyprint(attacker + " attacked " + victim + " with " + item + ".", " ")
                         if "Shield" in inventory and random.randint(0,2) < 2:
-                            print(victim + " blocked the attack with a shield.",end=" ")
+                            storyprint(victim + " blocked the attack with a shield."," ")
                             if random.randint(0,2) == 2:
                                 inventory.remove("Shield")
-                                print(victim + "'s shield broke from the attack.")
+                                storyprint(victim + "'s shield broke from the attack.", "\n")
                             else:
                                 print('')
                         elif random.randint(0,2) == 2:
-                            print(victim + " was defeated.", end="")
+                            storyprint(victim + " was defeated.", "\n")
                             good_guys.remove(victim)
                             if len(good_guys) == 0:
-                                print("  The bad guy"+is_plural(bad_guys)+" won.")
+                                storyprint("  The bad guy"+is_plural(bad_guys)+" won.", "\n")
                                 break
-                            else:
-                                print('')
                         elif random.randint(0,1) == 1:
                             if len(inventory) == 0:
-                                print("Missed.")
+                                storyprint("Missed.", "\n")
                             else:
-                                print(victim + " blocked the attack with (a) " + random.choice(inventory)+ ".")
+                                storyprint(victim + " blocked the attack with (a) " + random.choice(inventory)+ ".", "\n")
                         else:
                             print('')
                 turn += 1
@@ -430,8 +444,8 @@ def introduce_bad_guy():
                         thing = random.choice(Tools)
         print(" ",end=" ")
         if r == 1:
-            print("Around the corner, " + bad_guys[-1] + " appeared.", end=" He/she ")
-            print(crime, end="")
+            storyprint("Around the corner, " + bad_guys[-1] + " appeared. He/she ", "")
+            storyprint(crime, "")
             if crime == "was trying to murder" or crime == "was stealing stuff from":
                 if len(inactive_good_guys) > 0 and s == 1:
                     new_guy = random.choice(inactive_good_guys)
@@ -439,39 +453,39 @@ def introduce_bad_guy():
                     inactive_good_guys.remove(new_guy)
                     print(" "+new_guy+".")
                 else:
-                    print(" "+good_guys[-1] + ".")
+                    storyprint(" "+good_guys[-1] + ".", "\n")
             elif crime == "was smuggling" or crime == "stole a":
-                print(" "+thing+".")
+                storyprint(" "+thing+".", "\n")
             elif crime == "was vandalizing":
 
-                print(" "+place+".")
+                storyprint(" "+place+".", "\n")
             else:
                 print(".")
-            print("  \"Hey! Stop that!\" " + random.choice(good_guys) + " shouted at " + bad_guys[-1] + ".")
+            storyprint("  \"Hey! Stop that!\" " + random.choice(good_guys) + " shouted at " + bad_guys[-1] + ".", "\n")
             if random.randint(0,1) == 1:
                 fight(False)
             else:
-                print("  "+bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+". He/she ran away.")
+                storyprint("  "+bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+". He/she ran away.", "\n")
                 retreated = bad_guys[-1]
                 inactive_bad_guys.append(retreated)
                 bad_guys.remove(retreated)
         elif r == 2:
-            print("Suddenly, " + bad_guys[-1] + " jumped behind the good guy"+is_plural(good_guys)+" and took them by surprise.")
+            storyprint("Suddenly, " + bad_guys[-1] + " jumped behind the good guy"+is_plural(good_guys)+" and took them by surprise.", "\n")
             fight(False)
         elif r == 3:
-            print("The good guy"+is_plural(good_guys)+" found " + bad_guys[-1] + ".")
+            storyprint("The good guy"+is_plural(good_guys)+" found " + bad_guys[-1] + ".", "\n")
         else:
-            print(bad_guys[-1] + " was having a pleasant walk. It wasn't pleasant for long, as soon as " + bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+", his/her walk immediately became the worst one he/she ever had.")
+            storyprint(bad_guys[-1] + " was having a pleasant walk. It wasn't pleasant for long, as soon as " + bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+", his/her walk immediately became the worst one he/she ever had.", "\n")
     else:
         introduce(bad_guys, False)
-        print("  Meanwhile, at " + random.choice(Places), end=", ")
+        storyprint("  Meanwhile, at " + random.choice(Places), ", ")
         r = random.randint(0, 2)
         if r == 1:
-            print(inactive_bad_guys[-1] + " was planning his/her next evil deed. He/she cackled evilly. \"This is the most evil thing I've ever planned! You know what? I'm just gonna do it!\" And so, he/she went out to do it. I'm not telling you. It's a secret.")
+            storyprint(inactive_bad_guys[-1] + " was planning his/her next evil deed. He/she cackled evilly. \"This is the most evil thing I've ever planned! You know what? I'm just gonna do it!\" And so, he/she went out to do it. I'm not telling you. It's a secret.", "\n")
         elif r == 2:
-            print(inactive_bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+" out the window. \"Uh-oh. I need to deal with them.\" He/she looked out the window again. \"Oh, drat! They're gone! Oh, well. I'm just gonna go after them.\" That was what he/she did.")
+            storyprint(inactive_bad_guys[-1] + " saw the good guy"+is_plural(good_guys)+" out the window. \"Uh-oh. I need to deal with them.\" He/she looked out the window again. \"Oh, drat! They're gone! Oh, well. I'm just gonna go after them.\" That was what he/she did.", "\n")
         else:
-            print(inactive_bad_guys[-1] + " was enjoying him/herself. He/she was thinking about all the evil deeds he/she had done in the past. \"You know what?\" he/she said. \"I'm going to go out and do some more evil deeds so that I'll have more deeds for me to think about.\" And so, he/she went out to do some more evil deeds for him/her to think about.")
+            storyprint(inactive_bad_guys[-1] + " was enjoying him/herself. He/she was thinking about all the evil deeds he/she had done in the past. \"You know what?\" he/she said. \"I'm going to go out and do some more evil deeds so that I'll have more deeds for me to think about.\" And so, he/she went out to do some more evil deeds for him/her to think about.", "\n")
 def good_guy_check():
     """Checks if there are active good guys. If not, then this function will introduce or re-introduce good guys."""
     global good_guys
@@ -484,10 +498,10 @@ def good_guy_check():
                 r = random.randint(1,10)
                 for x in range(r):
                     introduce(good_guys, True)
-            print("  There were no good guys left. But some other good guy"+is_plural(good_guys)+" came to do the right thing.", end=" ")
+            storyprint("  There were no good guys left. But some other good guy"+is_plural(good_guys)+" came to do the right thing.", " ")
             list_party(good_guys, "Those good guys were")
         else:
-            print("  The good guys were gone. But some more good guys came to the scene.")
+            storyprint("  The good guys were gone. But some more good guys came to the scene.", "\n")
             for x in range(random.randint(2, 13)):
                 introduce(good_guys, True)
             list_party(good_guys, "  The new good guys were")
@@ -531,7 +545,7 @@ def goto():
     if subject == "Outer space" and "Rocket ship" in active_vehicles:
         active_vehicles = ["Rocket ship"]
         place = subject
-        print("3, 2, 1, BLAST OFF! The good guy"+is_plural(good_guys)+" blasted off into space in a rocket ship!")
+        storyprint("3, 2, 1, BLAST OFF! The good guy"+is_plural(good_guys)+" blasted off into space in a rocket ship!", "\n")
         if len(bad_guys) > 0:
             left_behind = bad_guys
             bad_guys.clear()
@@ -541,11 +555,11 @@ def goto():
             while subject ==  "Outer space" or subject == place:
                 subject = random.choice(Places)
         place = subject
-        print("The good guy"+is_plural(good_guys)+" went to "+place+" by ", end="")
+        storyprint("The good guy"+is_plural(good_guys)+" went to "+place+" by ", "")
         if len(active_vehicles) == 0:
-            print("foot.")
+            storyprint("foot.", "\n")
         else:
-            print(random.choice(active_vehicles)+".")
+            storyprint(random.choice(active_vehicles)+".", "\n")
         if len(bad_guys) > 0:
             left_behind = bad_guys
             bad_guys.clear()
@@ -657,7 +671,7 @@ def print_inventory():
                 inventory_dictionary[item] += 1
             else:
                 inventory_dictionary[item] = 1
-        print("  The good guy"+is_plural(good_guys)+" had ", end="")
+        storyprint("  The good guy"+is_plural(good_guys)+" had ", "")
         printed_inventory = []
         for item, quantity in inventory_dictionary.items():
             if quantity == 1:
@@ -669,9 +683,9 @@ def print_inventory():
                     printed_inventory.append(str(quantity) + " " + item + "s")
         for index, item in enumerate(printed_inventory):
             if index == len(printed_inventory)-1:
-                print("and " + item.lower() + ".")
+                storyprint("and " + item.lower() + ".", "\n")
             else:
-                print(item.lower(), end=", ")
+                storyprint(item.lower(), ", ")
 def list_vehicles():
     """Lists good guys' vehicles."""
     global active_vehicles
@@ -700,14 +714,14 @@ def list_party(lyst, start):
     if last_list != 'party':
         if start.startswith("Our hero") or start.startswith("The good"):
             last_list = "party"
-        print(start,end=" ")
+        storyprint(start," ")
         for index, person in enumerate(lyst):
             if index == len(lyst)-1 and len(lyst) != 1:
-                print("and " + person, end="")
+                storyprint("and " + person, "")
             else:
-                print(person, end="")
+                storyprint(person, "")
             if person.endswith("Holy Ghost"):
-                print("(he/she isn't THE Holy Ghost, but a ghost that is holy)", end="")
+                storyprint("(he/she isn't THE Holy Ghost, but a ghost that is holy)","")
             if index == len(lyst)-1:
                 print(".")
             else:
@@ -734,28 +748,28 @@ def location_specific():
     global names
     good_guy_check()
     if place == "Chernobyl":
-        print("  The radioactive radiation at Chernobyl was intense! The good guy"+is_plural(good_guys)+" needed to get out of Chernobyl!")
+        storyprint("  The radiation in Chernobyl was intense! The good guy"+is_plural(good_guys)+" needed to get out of Chernobyl!", "\n")
         if not "Leave Chernobyl" in goals:
             goals.append("Leave Chernobyl")
         if random.randint(0,2) == 1:
             victim = random.choice(good_guys)
             good_guys.remove(victim)
             print(" ", end=" ")
-            print(victim + " couldn't stand the radiation, so he/she "+random.choice(death_terms)+" from it.")
+            storyprint(victim + " couldn't stand the radiation, so he/she "+random.choice(death_terms)+" from it.", "\n")
             if random.randint(0,1) == 1 and len(good_guys) > 0:
-                print("  After "+victim+" died from radiation, the other good guy"+is_plural(good_guys)+" slowly "+random.choice(death_terms)+" from the radiation. One by one.")
+                storyprint("  After "+victim+" died from radiation, the other good guy"+is_plural(good_guys)+" slowly "+random.choice(death_terms)+" from the radiation. One by one.", "\n")
                 good_guys.clear()
             good_guy_check()
         if len(bad_guys) > 0 and random.randint(0, 1) == 1:
             victim = random.choice(bad_guys)
             bad_guys.remove(victim)
             print(" ", end=" ")
-            print(victim + " couldn't stand the radiation, so he/she "+random.choice(death_terms)+" from it.")
+            storyprint(victim + " couldn't stand the radiation, so he/she "+random.choice(death_terms)+" from it.", "\n")
             if random.randint(0,1) == 1 and len(bad_guys) > 0:
-                print("  After "+victim+" died from radiation, the other bad guy"+is_plural(bad_guys)+" slowly "+random.choice(death_terms)+" from the radiation. One by one.")
+                storyprint("  After "+victim+" died from radiation, the other bad guy"+is_plural(bad_guys)+" slowly "+random.choice(death_terms)+" from the radiation. One by one.", "\n")
                 bad_guys.clear()
     elif place == "Death Valley":
-        print("  Death Valley is called \"Death Valley\" for a reason.", end=" ")
+        storyprint("  Death Valley is called \"Death Valley\" for a reason.", " ")
         if random.randint(0,2) == 1 and len(good_guys) > 0:
             victim = random.choice(good_guys)
             good_guys.remove(victim)
@@ -764,46 +778,46 @@ def location_specific():
             bad_guys.remove(victim)
         else:
             victim = "Nobody"
-        print(victim + " "+random.choice(death_terms)+".")
+        storyprint(victim + " "+random.choice(death_terms)+".", "\n")
     elif place == "church":
         print(" ", end=" ")
         if random.randint(0,1) == 1:
-            print("A priest was saying Mass.")
+            storyprint("A priest was saying Mass.", "\n")
         else:
-            print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" praying.")
+            storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" praying.", "\n")
         if len(bad_guys) > 0:
             good_guys.extend(bad_guys)
             bad_guys.clear()
-            print("  The bad guy(s) at church learned that what they "+were_was(bad_guys)+" doing was so bad. And so, there were more good guys.")
+            storyprint("  The bad guy(s) at church learned that what they "+were_was(bad_guys)+" doing was so bad. And so, there were more good guys.", "\n")
             list_party(good_guys, "  Now, the good guys were")
         if random.randint(0,1) == 1:
             new_mission()
-            print("  That might have been an answer to the good guy"+is_plural(good_guys)+"'s prayers!")
+            storyprint("  That might have been an answer to the good guy"+is_plural(good_guys)+"'s prayers!", "\n")
             if goals[-1] == "Visit Outer space" and not "Rocket ship" in inventory:
                 inventory.append("Rocket ship")
-                print("  Since the good guy"+is_plural(good_guys)+"'s mission was to go to space, they recieved a rocket ship for them to blast off into space in.")
+                storyprint("  Since the good guy"+is_plural(good_guys)+"'s mission was to go to space, they recieved a rocket ship for them to blast off into space in.", "\n")
     elif place == "jail":
         print(" ", end=" ")
         if random.randint(0,1) == 1:
-            print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" just visiting the jail. They did nothing wrong.")
+            storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" just visiting the jail. They did nothing wrong.", "\n")
             if len(inactive_bad_guys) > 0 or len(bad_guys) > 0:
                 if len(bad_guys) > 0:
                     if random.randint(0,1) == 1:
                         inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
-                print("  The bad guy"+is_plural(inactive_bad_guys)+" "+were_was(inactive_bad_guys)+" behind bars. They wouldn't be doing any more evil for a long time.")
+                storyprint("  The bad guy"+is_plural(inactive_bad_guys)+" "+were_was(inactive_bad_guys)+" behind bars. They wouldn't be doing any more evil for a long time.", "\n")
         else:
-            print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" behind bars. They needed to escape.",end=" ")
+            storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" behind bars. They needed to escape."," ")
             goals.append("Leave jail")
             if len(inventory) > 0:
-                print("So, they tried to escape with a "+random.choice(inventory)+".")
+                storyprint("So, they tried to escape with a "+random.choice(inventory)+".", "\n")
                 if random.randint(0,1) == 1:
                     NewPlace()
-                    print("  They managed to escape! They were now in "+place+".")
+                    storyprint("  They managed to escape! They were now in "+place+".", "\n")
                 else:
-                    print("  The plan to escape didn't work.")
+                    storyprint("  The plan to escape didn't work.", "\n")
             else:
-                print("The good guy"+is_plural(good_guys)+" had nothing to escape from jail with.")
+                storyprint("The good guy"+is_plural(good_guys)+" had nothing to escape from jail with.", "\n")
     elif place == "the Open ocean":
         r = random.randint(0, 1)
         if r == 1:
@@ -812,9 +826,9 @@ def location_specific():
                     bad_guys.append(random.choice(names) + " the Pirate")
                 else:
                     pirate_name = input("(Give a pirate a name.) ")
-            print("  Pirates attacked the good guy"+is_plural(good_guys), end="")
+            storyprint("  Pirates attacked the good guy"+is_plural(good_guys), "")
             if "Boat" in active_vehicles:
-                print("'s ship",end="")
+                storyprint("'s ship","")
             print("!")
             bad_guys.append(pirate_name + " the Pirate")
             if "Boat" in active_vehicles:
@@ -823,7 +837,7 @@ def location_specific():
                 list_party(bad_guys, "The bad guys here were")
             fight(True)
         elif not "Boat" in active_vehicles:
-            print("  The good guy"+is_plural(good_guys)+" had to swim.", end=" ")
+            storyprint("  The good guy"+is_plural(good_guys)+" had to swim.", " ")
             victim = random.choice(good_guys)
             while victim.endswith("Diver") or victim != "Nobody" or "fish" in victim.lower():
                 if random.randint(0, 1) == 1:
@@ -833,75 +847,64 @@ def location_specific():
                     good_guys.append("Nobody")
                     break
             good_guys.remove(victim)
-            print(victim + " drowned because he/she wasn't good at swimming.")
+            storyprint(victim + " drowned because he/she wasn't good at swimming.", "\n")
         else:
             victim = random.choice(good_guys)
-            print(victim + " fell overboard! The good guy"+is_plural(good_guys)+" tried to rescue him/her,", end="")
+            storyprint(victim + " fell overboard! The good guy"+is_plural(good_guys)+" tried to rescue him/her,", "")
             s = random.randint(0, 2)
             if s == 1 and not victim.endswith("Diver"):
-                print(" but he/she drowned.")
+                storyprint(" but he/she drowned.", "\n")
                 good_guys.remove(victim)
             elif s == 2:
-                print(" but he/she disappeared under the water.")
+                storyprint(" but he/she disappeared under the water.", "\n")
                 good_guys.remove(victim)
                 inactive_good_guys.append(victim)
             else:
-                print(" and he/she was saved!")
-    elif PlaceTypes[place] == "outdoors" and random.randint(0,1) == 1:
-        if random.randint(0,1) == 1:
-            animal = input("(What animal did the good guy(s) see?)")
-            if not animal in Animals:
-                Animals.append(animal)
-        else:
-            animal = random.choice(Animals)
-        print("  The good guy"+is_plural(good_guys)+" saw a(n) "+animal + ".", end=" ")
-        if random.randint(0, 1) == 1:
-            print("They followed it.", end=" ")
-        print("Then, it disappeared.")
+                storyprint(" and he/she was saved!", "\n")
     elif place == "Outer space":
         print(" ", end=" ")
         if random.randint(0, 2) == 1 and "Rocket ship" in active_vehicles:
-            print("  An asteroid crashed into the good guy"+is_plural(good_guys)+"'s rocket ship.",end=" ")
+            storyprint("  An asteroid crashed into the good guy"+is_plural(good_guys)+"'s rocket ship."," ")
             if random.randint(0,1) == 1:
-                print('Luckily, '+random.choice(good_guys)+ " fixed it. Now, the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" journeying through space.")
+                storyprint('Luckily, '+random.choice(good_guys)+ " fixed it. Now, the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" journeying through space.", "\n")
             else:
-                print("The damage couldn't be fixed. The good guy"+is_plural(good_guys)+" had to get back to earth fast!")
+                storyprint("The damage couldn't be fixed. The good guy"+is_plural(good_guys)+" had to get back to earth fast!", "\n")
                 if random.randint(0,1) == 1:
                     NewPlace()
-                    print("  They flew to "+place+".", end=" ")
+                    storyprint("  They flew to "+place+".", " ")
                     if place == "Outer space":
-                        print("Wait, WHAT?!? They were STILL IN SPACE??? Since space was so big, and the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" so far from Earth, they were still in space.")
+                        storyprint("Wait, WHAT?!? They were STILL IN SPACE??? Since space was so big, and the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" so far from Earth, they were still in space.", "\n")
                         goals.append("Leave Outer space")
                     else:
-                        print("It was good to be back on Earth. The good guy"+is_plural(good_guys)+" threw their damaged space ship away. It was now on top of a big mountain of trash in the dump where everyone passing by could see it.")
+                        storyprint("It was good to be back on Earth. The good guy"+is_plural(good_guys)+" threw their damaged space ship away. It was now on top of a big mountain of trash in the dump where everyone passing by could see it.", "\n")
                         active_vehicles.remove("Rocket ship")
         elif random.randint(0,1) == 1:
             victim = random.choice(good_guys)
-            print("  "+victim + " ran out of air. So, he/she "+random.choice(death_terms)+".")
+            storyprint("  "+victim + " ran out of air. So, he/she "+random.choice(death_terms)+".", "\n")
             good_guys.remove(victim)
         else:
             nice = random.randint(0,1)
             if nice == 1:
                 alien_name = input("(Name the friendly alien.) ")
                 good_guys.append(alien_name+" the Friendly Alien")
-                print("  The"+is_plural(good_guys)+" met "+good_guys[-1]+". That alien was friendly and followed the good guy"+is_plural(good_guys)+".")
+                storyprint("  The"+is_plural(good_guys)+" met "+good_guys[-1]+". That alien was friendly and followed the good guy"+is_plural(good_guys)+".", "\n")
             else:
                 alien_name = input("(Name the hostile alien.) ")
                 bad_guys.append(alien_name+" the Hostile Alien")
-                print("  The"+is_plural(good_guys)+" met "+bad_guys[-1]+" That alien wasn't happy. It had a laser gun pointed at the good guy"+is_plural(good_guys)+".")
+                storyprint("  The"+is_plural(good_guys)+" met "+bad_guys[-1]+" That alien wasn't happy. It had a laser gun pointed at the good guy"+is_plural(good_guys)+".", "\n")
                 fight(False)
     elif place == "a Haunted house":
         if random.randint(0,1) == 1:
             alien_name = input("(Name the friendly ghost.) ")
             good_guys.append(alien_name+" the Friendly Ghost")
-            print("  The good guy(s), met "+good_guys[-1]+". It was friendly, so it followed them around.")
+            storyprint("  The good guy(s), met "+good_guys[-1]+". It was friendly, so it followed them around.", "\n")
         else:
             alien_name = input("(Name the unfriendly ghost.) ")
             bad_guys.append(alien_name+" the Unfriendly Ghost")
             goals.append("Leave a Haunted house")
-            print("  The good guy"+is_plural(good_guys)+" heard a mysterious voice from nowhere saying, \"Goooo aaaawwaaayyy. Yooou're nooot weelcooome heeere.\"\n  The good guy"+is_plural(good_guys)+" continued walking down the hallway of the haunted house, with the floorboards creaking for every step they take.\n  Suddenly, they saw a ghost! \"I told you to go away!\" the ghost shouted. \"Or my name isn't "+bad_guys[-1]+"!\"")
+            storyprint("  The good guy"+is_plural(good_guys)+" heard a mysterious voice from nowhere saying, \"Goooo aaaawwaaayyy. Yooou're nooot weelcooome heeere.\"\n  The good guy"+is_plural(good_guys)+" continued walking down the hallway of the haunted house, with the floorboards creaking for every step they take.\n  Suddenly, they saw a ghost! \"I told you to go away!\" the ghost shouted. \"Or my name isn't "+bad_guys[-1]+"!\"", "\n")
     elif place == "A desert":
-        print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" thirsty.")
+        storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" thirsty.")
         if "Food" in inventory:
             if random.randint(0,1) == 1:
                 snack = random.choice(Foods)
@@ -909,7 +912,7 @@ def location_specific():
                 snack = input("(Type in a food.)")
                 if not snack in Foods:
                     Foods.append(snack)
-            print("  The good guy"+is_plural(good_guys)+" had (a) "+snack+". Somehow, they felt refreshed. But not for long.")
+            storyprint("  The good guy"+is_plural(good_guys)+" had (a) "+snack+". Somehow, they felt refreshed. But not for long.", "\n")
             if random.randint(0,1) == 1:
                 inventory.remove("Food")
             goals.append("Leave A desert")
@@ -917,17 +920,17 @@ def location_specific():
             NewPlace = place
             while NewPlace == place:
                 NewPlace = random.choice(Places)
-            print("  "+random.choice(good_guys)+" saw "+NewPlace+". \"Hey!\" he/she said. \"There's probably water there!\"")
-            print("  \"Yeah!\" "+random.choice(good_guys) + " said. \"Let's go!\"\n  ",end='')
+            storyprint("  "+random.choice(good_guys)+" saw "+NewPlace+". \"Hey!\" he/she said. \"There's probably water there!\"", "\n")
+            storyprint("  \"Yeah!\" "+random.choice(good_guys) + " said. \"Let's go!\"", "\n")
             if random.randint(0,5) == 5:
-                print("That " +NewPlace+" place was real. The good guys made it safely there, out of the desert.")
+                storyprint("That " +NewPlace+" place was real. The good guys made it safely there, out of the desert.", "\n")
                 place = NewPlace
             else:
-                print("When the good guy"+is_plural(good_guys)+" went over to where that place was, or where they thought it was, it disappeared. It was a mirage.\n  \"We need to get out of here!\" "+random.choice(good_guys)+" said.")
+                storyprint("When the good guy"+is_plural(good_guys)+" went over to where that place was, or where they thought it was, it disappeared. It was a mirage.\n  \"We need to get out of here!\" "+random.choice(good_guys)+" said.", "\n")
                 goals.append("Leave A desert")
     elif place == "Minecraft":
         if random.randint(0,1) == 1:
-            print("  Since the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" in Minecraft, the game where people build things out of blocks. The good guy"+is_plural(good_guys)+" decided to build something in Minecraft.\n  Later, the good guy"+is_plural(good_guys)+" built "+random.choice(Places)+" in Minecraft!")
+            storyprint("  Since the good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" in Minecraft, the game where people build things out of blocks. The good guy"+is_plural(good_guys)+" decided to build something in Minecraft.\n  Later, the good guy"+is_plural(good_guys)+" built "+random.choice(Places)+" in Minecraft!", "\n")
         else:
             for x in range(random.randint(2,10)):
                  if random.randint(0,1) == 1:
@@ -937,37 +940,37 @@ def location_specific():
                      if not "Creeper" in creeper_name:
                          creeper_name = creeper_name + " the Creeper"
                      bad_guys.append(creeper_name)
-            print("  Suddenly, some creepers appeared. When I say creepers when I'm also talking about Minecraft, I'm not talking about plants that climb up trees and stuff. I'm talking about blocky, mottled-green creatures with no arms and four little legs that it scuttles with, ready to explode in your face.")
+            storyprint("  Suddenly, some creepers appeared. When I say creepers when I'm also talking about Minecraft, I'm not talking about plants that climb up trees and stuff. I'm talking about blocky, mottled-green creatures with no arms and four little legs that it scuttles with, ready to explode in your face.", "\n")
             if random.randint(0,1) == 1:
                 victim = random.choice(good_guys)
-                print("  A creeper crept up and blew "+victim+" up. That was the last of him/her.")
+                storyprint("  A creeper crept up and blew "+victim+" up. That was the last of him/her.", "\n")
                 good_guys.remove(victim)
 
-            print("  The creepers were ready for battle!")
+            storyprint("  The creepers were ready for battle!", "\n")
             fight(False)
     elif place == "a cave":
         print(" ", end=" ")
         if random.randint(0,1) == 1:
-            print("The good guy"+is_plural(good_guys)+" went mining.", end=" ")
+            storyprint("The good guy"+is_plural(good_guys)+" went mining.", end=" ")
             if random.randint(0,3) == 2:
-                print("They found gold!")
+                storyprint("They found gold!", "\n")
                 inventory.append("money")
                 if random.randint(0,1) == 1:
                     inventory.append("treasure")
             else:
-                print("They didn't mine anything interesting.")
+                storyprint("They didn't mine anything interesting.", "\n")
         else:
-            print("The ceiling caved in. The good guy"+is_plural(good_guys)+" picked at the wall that kept them inside the cave. Will they make it out?")
+            storyprint("The ceiling caved in. The good guy"+is_plural(good_guys)+" picked at the wall that kept them inside the cave. Would they make it out?", "\n")
             NewPlace()
             if random.randint(0,1) == 1:
-                print("  The good guy"+is_plural(good_guys)+" made it out! They were now at "+place+".")
+                storyprint("  The good guy"+is_plural(good_guys)+" made it out! They were now at "+place+".", "\n")
             else:
-                print("  The good guy"+is_plural(good_guys)+" suffocated.")
+                storyprint("  The good guy"+is_plural(good_guys)+" suffocated.", "\n")
                 good_guys.clear()
                 good_guy_check()
-                print("The other good guy"+is_plural(good_guys)+' "+were_was(good_guys)+" at '+place+".")
+                storyprint("The other good guy"+is_plural(good_guys)+' "+were_was(good_guys)+" at '+place+".", "\n")
     elif place == "a school":
-        print("  Life in school was boring. The lessons were long. The lunches there were bland and tasteless. The good guy"+is_plural(good_guys)+" needed to get out of there.")
+        storyprint("  Life in school was boring. The lessons were long. The lunches there were bland and tasteless. The good guy"+is_plural(good_guys)+" needed to get out of there.", "\n")
         goals.append("Leave a school")
 def new_mission():
     """This function gives the good guys a goal to work towards."""
@@ -1051,28 +1054,28 @@ def new_mission():
             to_meet = inactive_good_guys[-1]
     if "computer" in inventory and random.randint(0,1) == 1:
         introduce(good_guys, False)
-        print("  The good guy"+is_plural(good_guys)+" got an email from "+inactive_good_guys[-1]+" saying that they need to", end=" ")
+        storyprint("  The good guy"+is_plural(good_guys)+" got an email from "+inactive_good_guys[-1]+" saying that they need to", " ")
     elif "Cell phone" in inventory and random.randint(0,1) == 1:
         introduce(good_guys, False)
-        print("  The good guy"+is_plural(good_guys)+" had a phone call from "+inactive_good_guys[-1]+" saying that they need to", end=" ")
+        storyprint("  The good guy"+is_plural(good_guys)+" had a phone call from "+inactive_good_guys[-1]+" saying that they need to", " ")
     elif random.randint(0,2) == 1:
-        print("  The good guy"+is_plural(good_guys)+" found a piece of paper saying that they need to", end=" ")
+        storyprint("  The good guy"+is_plural(good_guys)+" found a piece of paper saying that they need to", " ")
     elif random.randint(0,2) == 2:
         introduce(good_guys, False)
-        print("  {} told the good guy{} to".format(inactive_good_guys[-1], is_plural(good_guys)), end=" ")
+        storyprint("  {} told the good guy{} to".format(inactive_good_guys[-1], is_plural(good_guys)), " ")
     else:
         introduce(good_guys, True)
-        print("  {} came and told the good guy{} to".format(good_guys[-1], is_plural(good_guys)), end=" ")
+        storyprint("  {} came and told the good guy{} to".format(good_guys[-1], is_plural(good_guys)), " ")
     if mission_kind == "Take":
-        print("find a/the " + item + ".")
+        storyprint("find a/the " + item + ".", "\n")
     elif mission_kind == "Destroy":
-        print("find and destroy a/the " + item + ".")
+        storyprint("find and destroy a/the " + item + ".", "\n")
     elif mission_kind == "Visit":
-        print("go to "+Place2GoTo + ".")
+        storyprint("go to "+Place2GoTo + ".", "\n")
     elif mission_kind == "Leave":
-        print("leave (the) {}.".format(place))
+        storyprint("leave (the) {}.".format(place), "\n")
     else:
-        print("meet {}.".format(to_meet))
+        storyprint("meet {}.".format(to_meet), "\n")
     goal_check()
 def elevator():
     """When this function is called, the good guys take an elevator ride. Who will they find in there?"""
@@ -1089,35 +1092,35 @@ def elevator():
     tripLen = random.randint(1, 10)
     left = False
     something_happened = True
-    print("  The good guy"+is_plural(good_guys)+" found an elevator and took a ride in it.")
+    storyprint("  The good guy"+is_plural(good_guys)+" found an elevator and took a ride in it.", "\n")
     for x in range(tripLen):
         if something_happened == True:
             something_happened = False
-            print("  The elevator was going "+direction+".")
+            storyprint("  The elevator was going "+direction+".", "\n")
         if random.randint(0,1) == 1:
             direction = random.choice(elev_directions)
         if random.randint(0,4) == 1 and len(inactive_good_guys) > 0:
             new_character = random.choice(inactive_good_guys)
             inactive_good_guys.remove(new_character)
             good_guys.append(new_character)
-            print("  The doors opened and "+new_character+" entered the elevator.")
+            storyprint("  The doors opened and "+new_character+" entered the elevator.", "\n")
             doors = "opened"
             something_happened = True
         elif random.randint(0,3) == 1 and len(inactive_bad_guys) > 0:
             new_character = random.choice(inactive_bad_guys)
             inactive_bad_guys.remove(new_character)
             bad_guys.append(new_character)
-            print("  The doors opened and "+new_character+" entered the elevator.")
+            storyprint("  The doors opened and "+new_character+" entered the elevator.", "\n")
             doors = "opened"
             something_happened = True
         elif random.randint(0,2) == 1:
             introduce(good_guys, True)
-            print("  The doors opened and "+good_guys[-1]+' entered the elevator.')
+            storyprint("  The doors opened and "+good_guys[-1]+' entered the elevator.', "\n")
             doors = "opened"
             something_happened = True
         elif random.randint(0,1) == 0:
             introduce(bad_guys, True)
-            print("  The doors opened and "+bad_guys[-1]+' entered the elevator.')
+            storyprint("  The doors opened and "+bad_guys[-1]+' entered the elevator.', "\n")
             doors = "opened"
             something_happened = True
         if random.randint(0,2) == 1 and len(bad_guys) > 0:
@@ -1127,8 +1130,8 @@ def elevator():
             print(" ",end=" ")
             if doors == "closed":
                 doors = "opened"
-                print("The doors opened.",end=" ")
-            print(quitter+" stepped out of the elevator.")
+                storyprint("The doors opened."," ")
+            storyprint(quitter+" stepped out of the elevator.", "\n")
             something_happened = True
         elif random.randint(0,1) == 1:
             quitter = random.choice(good_guys)
@@ -1137,8 +1140,8 @@ def elevator():
             print(" ",end=" ")
             if doors == "closed":
                 doors = "opened"
-                print("The doors opened.",end=" ")
-            print(quitter+" stepped out of the elevator.")
+                storyprint("The doors opened."," ")
+            storyprint(quitter+" stepped out of the elevator.", "\n")
             something_happened = True
             if len(good_guys) == 0 or random.randint(0,1) == 1:
                 if len(good_guys) == 0:
@@ -1147,27 +1150,27 @@ def elevator():
                 left = True
                 break
         if doors == "opened" and x < tripLen - 1:
-            print("  The doors closed, and the elevator continued moving.")
+            storyprint("  The doors closed, and the elevator continued moving.", "\n")
             doors = "closed"
             direction = random.choice(elev_directions)
         if len(bad_guys) > 0 and random.randint(0,1) == 1:
             fight(True)
         good_guy_check()
     if left == False and random.randint(0,1) == 1:
-        print("  The elevator stopped abruptly. It was broken down. The good guy"+is_plural(good_guys)+ " needed to get out of there. "+random.choice(good_guys)+" tried to open the doors.")
+        storyprint("  The elevator stopped abruptly. It was broken down. The good guy"+is_plural(good_guys)+ " needed to get out of there. "+random.choice(good_guys)+" tried to open the doors.", "\n")
         if random.randint(0,1) == 1:
-            print("  The doors were stuck. The good guy"+is_plural(good_guys)+" waited for help to arrive.")
+            storyprint("  The doors were stuck. The good guy"+is_plural(good_guys)+" waited for help to arrive.", "\n")
             introduce(good_guys, True)
-            print("  Later, the doors were opened from the outside by "+good_guys[-1]+".")
+            storyprint("  Later, the doors were opened from the outside by "+good_guys[-1]+".", "\n")
         else:
-            print("  Later, "+random.choice(good_guys)+" tried to open the doors. This time, he/she succeeded!")
-    print("  The good guy"+is_plural(good_guys)+" left the elevator.")
+            storyprint("  Later, "+random.choice(good_guys)+" tried to open the doors. This time, he/she succeeded!", "\n")
+    storyprint("  The good guy"+is_plural(good_guys)+" left the elevator.", "\n")
     if len(bad_guys) > 0:
         inactive_bad_guys.extend(bad_guys)
         bad_guys.clear()
     if random.randint(0,5) == 1:
                     NewPlace()
-                    print("  They were now at "+place+".")
+                    storyprint("  They were now at "+place+".", "\n")
 #Good events
 def use_item():
     global inventory
@@ -1184,19 +1187,19 @@ def use_item():
         used_item = random.choice(inventory)
         if used_item == "Flashlight":
             if PlaceTypes[place] == "outdoors" or random.randint(0,1) == 1:
-                print("  It was nighttime.",end=" ")
+                storyprint("  It was nighttime."," ")
             else:
-                print("  It was dark.",end=" ")
-            print(random.choice(good_guys)+" took out his/her flashlight and lit the way.")
+                storyprint("  It was dark."," ")
+            storyprint(random.choice(good_guys)+" took out his/her flashlight and lit the way.", "\n")
             if random.randint(0,1) == 1:
-                print("  Later, the flashlight stopped working because it ran out of battery power.")
+                storyprint("  Later, the flashlight stopped working because it ran out of battery power.", "\n")
                 if used_item in inventory:
                     inventory.remove(used_item)
         elif used_item == "Invisibility potion" and len(bad_guys) > 0:
             list_party(bad_guys,"  The bad guys here were")
-            print("  The good guy"+is_plural(good_guys)+" needed to sneak past the bad guy"+is_plural(bad_guys)+".", end=" ")
+            storyprint("  The good guy"+is_plural(good_guys)+" needed to sneak past the bad guy"+is_plural(bad_guys)+".", " ")
             inventory.remove(used_item)
-            print("They drank their invisibility potion and snuck away from the bad guy"+is_plural(bad_guys)+".")
+            storyprint("They drank their invisibility potion and snuck away from the bad guy"+is_plural(bad_guys)+".", "\n")
             inactive_bad_guys.extend(bad_guys)
             bad_guys.clear()
         elif used_item == "money":
@@ -1213,7 +1216,7 @@ def use_item():
                     new_tool = input("(Type in an item.)")
                     if not new_tool in Tools:
                         Tools.append(new_tool)
-                    print("a(n) "+new_tool+".")
+                    storyprint("a(n) "+new_tool+".", "\n")
                     inventory.append(new_tool)
                     if random.randint(0,1) == 1:
                         inventory.remove("money")
@@ -1221,7 +1224,7 @@ def use_item():
                     new_tool = "money"
                 while goodGuy == goodGuy2:
                     goodGuy2 = random.choice(good_guys)
-                print("  "+goodGuy+" gave "+goodGuy2+" a(n) "+new_tool+".")
+                storyprint("  "+goodGuy+" gave "+goodGuy2+" a(n) "+new_tool+".", "\n")
                 inventory.append(new_tool)
                 if random.randint(0,1) == 1:
                         inventory.remove("money")
@@ -1233,140 +1236,140 @@ def use_item():
             if len(bad_guys) > 0:
                 victim = random.choice(bad_guys)
                 attacker = random.choice(good_guys)
-                print(attacker+" set "+victim+" on fire with a fire lighter.", end=" ")
+                storyprint(attacker+" set "+victim+" on fire with a fire lighter.", " ")
                 if random.randint(0,1) == 1:
-                    print("That was the last of "+victim+".", end=" ")
+                    storyprint("That was the last of "+victim+".", " ")
                     bad_guys.remove(victim)
             else:
-                print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" feeling cold, so they used their fire lighter to make a little fire to keep them comfy and cozy.",end=" ")
+                storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" feeling cold, so they used their fire lighter to make a little fire to keep them comfy and cozy."," ")
             if random.randint(0,1) == 1:
-                print("The firelighter had lit its last fire.")
+                storyprint("The firelighter had lit its last fire.", "\n")
                 inventory.remove(used_item)
             else:
                 print("")
             if PlaceTypes[place] == "indoors" and random.randint(0,1) == 1:
-                    print("  The good guy"+is_plural(good_guys)+" made a mistake. They accidentally set "+place+" on fire. They needed to get out of here.")
+                    storyprint("  The good guy"+is_plural(good_guys)+" made a mistake. They accidentally set "+place+" on fire. They needed to get out of here.", "\n")
                     if random.randint(0,1) == 1:
                           for x in range(random.randint(1, len(good_guys))):
                               victim = random.choice(good_guys)
-                              print("  "+victim +" didn't make it out.")
+                              storyprint("  "+victim +" didn't make it out.", "\n")
                               good_guys.remove(victim)
                     if len(bad_guys) > 0:
-                        print("  The bad guy"+is_plural(bad_guys)+" also wanted to get out.")
+                        storyprint("  The bad guy"+is_plural(bad_guys)+" also wanted to get out.", "\n")
                         if random.randint(0,1) == 1:
                             for x in range(random.randint(1, len(bad_guys))):
                               victim = random.choice(bad_guys)
-                              print("  "+victim +" didn't make it out.")
+                              storyprint("  "+victim +" didn't make it out.", "\n")
                               bad_guys.remove(victim)
                     NewPlace()
                     if len(good_guys) > 0:
-                        print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".")
+                        storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".", "\n")
         elif used_item == "Giant Growth potion":
             if len(goals) > 0 or len(bad_guys)>0:
                 print(" ",end=" ")
                 inventory.remove(used_item)
                 user = random.choice(good_guys)
-                print(user+" drank up a giant growth potion and grew super tall.")
+                storyprint(user+" drank up a giant growth potion and grew super tall.", "\n")
                 if len(goals) > 0:
-                    print("  "+user+" saw something that would help accomplish one of the good guy"+is_plural(good_guys)+"'s goals.")
+                    storyprint("  "+user+" saw something that would help accomplish one of the good guy"+is_plural(good_guys)+"'s goals.", "\n")
                     goal_resolve()
                 if len(bad_guys) == 1:
-                          print("  "+user+" tried to squish "+bad_guys[0]+".",end=" ")
+                          storyprint("  "+user+" tried to squish "+bad_guys[0]+"."," ")
                           if random.randint(0,1) == 1:
                               bad_guys.clear()
-                              print(user+" squashed the bad guy!")
+                              storyprint(user+" squashed the bad guy!", "\n")
                           else:
                               if random.randint(0,1) == 1:
-                                print("But "+user+" missed.")
+                                storyprint("But "+user+" missed.", "\n")
                               else:
-                                print("But "+bad_guys[0]+" dodged.")
+                                storyprint("But "+bad_guys[0]+" dodged.", "\n")
                 elif len(bad_guys) > 0:
                     print("")
                     for x in range(random.randint(1,len(bad_guys))):
                         victim = random.choice(bad_guys)
                         bad_guys.remove(victim)
-                        print("  "+user+" squashed "+victim+".")
+                        storyprint("  "+user+" squashed "+victim+".", "\n")
         elif used_item == "Key":
             if random.randint(0,1) == 1 and PlaceTypes[place] == "indoors":
-                print("  The good guy"+is_plural(good_guys)+" found a door. It was locked. They tried to unlock the door with a key.")
+                storyprint("  The good guy"+is_plural(good_guys)+" found a door. It was locked. They tried to unlock the door with a key.", "\n")
                 if random.randint(0,1) == 1:
-                    print("  The door was unlocked.", end="")
+                    storyprint("  The door was unlocked.", "")
                     if random.randint(0,1) == 1 and len(bad_guys) > 0:
                         inactive_bad_guys.extend(bad_guys)
                         bad_guys.clear()
                     if random.randint(0,4) == 4:
-                        print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" in another room.")
+                        storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" in another room.", "\n")
                     else:
                         print('')
                         NewPlace()
-                        print("  The good guy"+is_plural(good_guys)+' '+were_was(good_guys)+" now in "+place+".")
+                        storyprint("  The good guy"+is_plural(good_guys)+' '+were_was(good_guys)+" now in "+place+".", "\n")
                 else:
-                    print("  The key didn't unlock the door.")
+                    storyprint("  The key didn't unlock the door.", "\n")
                 if random.randint(0,1) == 1:
-                    print("  The key was stuck in the door's keyhole. So, the good guy"+is_plural(good_guys)+" left it in the keyhole.")
+                    storyprint("  The key was stuck in the door's keyhole. So, the good guy"+is_plural(good_guys)+" left it in the keyhole.", "\n")
                     inventory.remove(used_item)
             elif len(bad_guys) > 0:
                 victim = random.choice(bad_guys)
-                print("  There was a cage, and the good guy"+is_plural(good_guys)+" managed to get "+victim+" inside.", end=" ")
+                storyprint("  There was a cage, and the good guy"+is_plural(good_guys)+" managed to get "+victim+" inside.", " ")
                 if random.randint(0,1) == 1:
-                    print("\n  Before "+random.choice(good_guys)+" could lock the cage, "+victim+" escaped.")
+                    storyprint("\n  Before "+random.choice(good_guys)+" could lock the cage, "+victim+" escaped.", "\n")
                 else:
                     bad_guys.remove(victim)
                     inactive_bad_guys.append(victim)
-                    print(random.choice(good_guys)+" locked the cage with "+victim+" inside of it.")
+                    storyprint(random.choice(good_guys)+" locked the cage with "+victim+" inside of it.", "\n")
                     if random.randint(0,1) == 1:
-                        print("  The key was stuck in the door's keyhole. So, the good guy"+is_plural(good_guys)+" left it in the keyhole.")
+                        storyprint("  The key was stuck in the door's keyhole. So, the good guy"+is_plural(good_guys)+" left it in the keyhole.", "\n")
                         inventory.remove(used_item)
         elif used_item == "Ray gun" and len(bad_guys) > 0:
             victim = random.choice(bad_guys)
-            print("  "+random.choice(good_guys)+" pointed his/her ray gun at "+victim+".\n  ZAP!",end=" ")
+            storyprint("  "+random.choice(good_guys)+" pointed his/her ray gun at "+victim+".\n  ZAP!"," ")
             if random.randint(0,1) == 1:
-                print("Direct hit! "+victim+" was no more!")
+                storyprint("Direct hit! "+victim+" was no more!", "\n")
                 bad_guys.remove(victim)
             else:
-                print(victim+" missed!")
+                storyprint(victim+" missed!", "\n")
             if random.randint(0,1) == 1:
                 inventory.remove(used_item)
-                print("  The ray gun ran out of power.")
+                storyprint("  The ray gun ran out of power.", "\n")
         elif used_item == "Rope":
             print(" ",end=" ")
             if random.randint(0,1) == 1:
-                print("The good guy"+is_plural(good_guys)+" climbed down a rope",end="")
+                storyprint("The good guy"+is_plural(good_guys)+" climbed down a rope","")
                 if len(bad_guys) > 0:
-                    print("and got away from the bad guy"+is_plural(bad_guys)+".")
+                    storyprint("and got away from the bad guy"+is_plural(bad_guys)+".", "\n")
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
                 else:
                     print(".")
                 NewPlace()
-                print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".")
+                storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".", "\n")
             elif len(bad_guys) > 0:
-                print("The good guy"+is_plural(good_guys)+" tied the bad guy"+is_plural(bad_guys)+" up with the rope.")
+                storyprint("The good guy"+is_plural(good_guys)+" tied the bad guy"+is_plural(bad_guys)+" up with the rope.", "\n")
                 inventory.remove(used_item)
                 if random.randint(0,1) == 1:
-                    print("  The rope wasn't tied properly. The bad guy"+is_plural(bad_guys)+" managed to escape from the rope trap.")
+                    storyprint("  The rope wasn't tied properly. The bad guy"+is_plural(bad_guys)+" managed to escape from the rope trap.", "\n")
                 else:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
             else:
                 print('')
         elif used_item == "First aid kit":
-            print("  "+random.choice(good_guys)+" was hurt. Good thing that the good guy"+is_plural(good_guys)+" had a first aid kit. He/she was healed.", end=" ")
+            storyprint("  "+random.choice(good_guys)+" was hurt. Good thing that the good guy"+is_plural(good_guys)+" had a first aid kit. He/she was healed.", " ")
             if random.randint(0,1) == 1:
-                print("The good guy"+is_plural(good_guys)+" used up the last of their first aid kit.")
+                storyprint("The good guy"+is_plural(good_guys)+" used up the last of their first aid kit.", "\n")
                 inventory.remove(used_item)
             else:
                 print("")
         elif used_item == "Disguise" and len(bad_guys) > 0:
             user = random.choice(good_guys)
-            print("  "+user + " put on a disguise. The bad guy"+is_plural(bad_guys)+" thought that he/she was a fellow bad guy.\n  \"I would like another person to come with me on my quest,\" "+user+" said.\n ",end=" ")
+            storyprint("  "+user + " put on a disguise. The bad guy"+is_plural(bad_guys)+" thought that he/she was a fellow bad guy.\n  \"I would like another person to come with me on my quest,\" "+user+" said.\n "," ")
             if random.randint(0,1) == 1 or len(bad_guys) == 1:
                 lucky = random.choice(bad_guys)
-                print(lucky+" was interested. \"Yes!\" he/she said. \"I would like to be on your quest.\"")
+                storyprint(lucky+" was interested. \"Yes!\" he/she said. \"I would like to be on your quest.\"", "\n")
             else:
                 lucky = "all"
                 multiple_bad_guys = is_plural(bad_guys)
-                print("All the bad guys were interested in joining "+user+" on his/her quest.")
+                storyprint("All the bad guys were interested in joining "+user+" on his/her quest.", "\n")
             if lucky == "all":
                     good_guys.append(bad_guys)
                     bad_guys.clear()
@@ -1374,12 +1377,12 @@ def use_item():
                     bad_guys.remove(lucky)
                     good_guys.append(lucky)
             if len(good_guys) > 1:
-                print("  "+user+" took ", end="")
+                storyprint("  "+user+" took ", "")
                 if lucky == "all":
-                    print("the bad guy"+multiple_bad_guys,end=" ")
+                    storyprint("the bad guy"+multiple_bad_guys," ")
                 else:
-                    print(lucky, end=" ")
-                print("to see the other good guy(s).\n  \"Wait,\" one of the bad guys said. \"Aren't those our enemies?\"\n  \"Not really,\" "+user+" said.\n  The bad guy(s) said that they would like to be on the good guy(s)'s quest. After thinking a bit, they joined the good guy(s).")
+                    storyprint(lucky, " ")
+                storyprint("to see the other good guy(s).\n  \"Wait,\" one of the bad guys said. \"Aren't those our enemies?\"\n  \"Not really,\" "+user+" said.\n  The bad guy(s) said that they would like to be on the good guy(s)'s quest. After thinking a bit, they joined the good guy(s).", "\n")
         elif used_item == "Magic wand":
             user = random.choice(good_guys)
             w = random.randint(0,1)
@@ -1390,13 +1393,13 @@ def use_item():
                     animal = input("(Type in an animal.)")
                     if not animal in Animals:
                         Animals.append(animal)
-            print("  "+user+" used his/her magic wand to", end=" ")
+            storyprint("  "+user+" used his/her magic wand to", " ")
             if len(bad_guys) > 0 and w == 1:
-                print("turn the bad guy",end="")
+                storyprint("turn the bad guy","")
                 if len(bad_guys) == 1:
-                    print(" into a(n) "+animal+".")
+                    storyprint(" into a(n) "+animal+".", "\n")
                 else:
-                    print("s into "+animal+"s.")
+                    storyprint("s into "+animal+"s.", "\n")
                     for index, baddie, in enumerate(bad_guys):
                         #The following piece of code can be copied for using a future transform command.
                         if 'the' in baddie:
@@ -1413,7 +1416,7 @@ def use_item():
                         subject = goal.replace("Leave ", "")
                         while place == subject:
                             place = random.choice(Places)
-                    print("go to "+place+".")
+                    storyprint("go to "+place+".", "\n")
                     if len(bad_guys) > 0:
                         inactive_bad_guys.extend(bad_guys)
                         bad_guys.clear()
@@ -1423,17 +1426,17 @@ def use_item():
                     else:
                         subject = goal.replace("Destroy ", "")
                     inventory.append(subject)
-                    print("get the "+subject+".", end=' ')
+                    storyprint("get the "+subject+".", ' ')
                     if goal.startswith("Destroy"):
-                        print("The good guy"+is_plural(good_guys)+" destroyed it with magic.")
+                        storyprint("The good guy"+is_plural(good_guys)+" destroyed it with magic.", "\n")
                     else:
                         print('')
                 else:
                     subject = goal.replace("Meet ", "")
-                    print("summon "+subject+".")
+                    storyprint("summon "+subject+".", "\n")
                     good_guys.append(subject)
             else:
-                print("do some magic.",end=" ")
+                storyprint("do some magic."," ")
                 trick = random.randint(0,9)
                 if trick == 1:
                     print("")
@@ -1450,29 +1453,29 @@ def use_item():
                             good_guys.append(re.sub(r'^(.*)the .*$', r'\1the '+animal.capitalize(), victim))
                     else:
                             good_guys.append(victim + " the " + animal.capitalize())
-                    print("  Poof! "+victim+" turned into a(n) "+animal+".")
+                    storyprint("  Poof! "+victim+" turned into a(n) "+animal+".", "\n")
                 elif trick == 2 and len(bad_guys) > 0:
                     victim = random.choice(bad_guys)
-                    print("Poof! "+victim+" disappeared.")
+                    storyprint("Poof! "+victim+" disappeared.", "\n")
                     bad_guys.remove(victim)
                     if random.randint(0,1) == 1:
                         inactive_bad_guys.append(victim)
                 elif trick == 3:
                     victim = random.choice(good_guys)
                     if victim == user:
-                        print(user+" made him/herself disappear.")
+                        storyprint(user+" made him/herself disappear.", "\n")
                     else:
-                        print(user+" made "+victim+" disappear.")
+                        storyprint(user+" made "+victim+" disappear.", "\n")
                     good_guys.remove(victim)
                     if random.randint(0,1) == 1:
                         inactive_good_guys.append(victim)
                 elif trick == 4 and len(active_vehicles) > 0:
                     victim = random.choice(active_vehicles)
-                    print(user+" made their "+victim+" disappear.")
+                    storyprint(user+" made their "+victim+" disappear.", "\n")
                     active_vehicles.remove(victim)
                 elif trick == 5 and len(inventory) > 0:
                     victim = random.choice(inventory)
-                    print(user+" made their "+victim+" disappear.")
+                    storyprint(user+" made their "+victim+" disappear.", "\n")
                     inventory.remove(victim)
                 elif trick == 6:
                     print('')
@@ -1483,7 +1486,7 @@ def use_item():
                         if not new_item in Tools:
                             Tools.append(new_item)
                         inventory.append(new_item)
-                    print("  Using magic, the good guy"+is_plural(good_guys)+" got a "+inventory[-1]+".")
+                    storyprint("  Using magic, the good guy"+is_plural(good_guys)+" got a "+inventory[-1]+".", "\n")
                 elif trick == 7:
                     print('')
                     if random.randint(0,1) == 1:
@@ -1493,27 +1496,28 @@ def use_item():
                         if not new_vehicle in Vehicles:
                             Vehicles.append(new_vehicle)
                         active_vehicles.append(new_vehicle)
-                    print("  The good guy"+is_plural(good_guys)+" got a "+active_vehicles[-1]+' from using magic.')
+                    storyprint("  The good guy"+is_plural(good_guys)+" got a "+active_vehicles[-1]+' from using magic.', "\n")
                 elif trick == 8:
                     inventory.remove(used_item)
-                    print("Poof! The magic wand disappeared.")
+                    storyprint("Poof! The magic wand disappeared.", "\n")
                 elif trick == 9 and len(inactive_bad_guys) > 0:
                     baddie = random.choice(inactive_bad_guys)
                     inactive_bad_guys.remove(baddie)
                     bad_guys.append(baddie)
-                    print("Poof! "+baddie+" appeared.")
+                    storyprint("Poof! "+baddie+" appeared.", "\n")
                 elif len(inactive_good_guys) > 0:
                     convertee = random.choice(inactive_good_guys)
                     inactive_good_guys.remove(convertee)
                     good_guys.append(convertee)
-                    print("Poof!",good_guys[-1],"appeared.")
+                    storyprint("Poof! "+good_guys[-1]+" appeared.", "\n")
                 else:
+                    print("")
                     introduce(good_guys, True)
-                    print("Poof!",good_guys[-1],"appeared.")
+                    storyprint("Poof! "+good_guys[-1]+" appeared.", "\n")
         elif used_item == "Shield" and len(bad_guys) > 0:
-            print("  "+random.choice(bad_guys)+" attacked "+random.choice(good_guys)+" with a "+random.choice(Tools)+'. But he/she used a shield to block the attack.', end=" ")
+            storyprint("  "+random.choice(bad_guys)+" attacked "+random.choice(good_guys)+" with a "+random.choice(Tools)+'. But he/she used a shield to block the attack.', " ")
             if random.randint(0,1) == 1:
-                print("The shield broke on impact.")
+                storyprint("The shield broke on impact.", "\n")
                 inventory.remove(used_item)
             else:
                 print("")
@@ -1529,158 +1533,158 @@ def use_item():
                 food = input("(What did the good guy(s) eat?)")
                 if not food in Foods:
                     Foods.append(food)
-            print("  "+user+" got hungry. So,", end=" ")
+            storyprint("  "+user+" got hungry. So,", " ")
             if user == "The good guys":
-                print("they ate some "+food+".")
+                storyprint("they ate some "+food+".", "\n")
             else:
-                print("He/she ate some "+food+".")
+                storyprint("He/she ate some "+food+".", "\n")
             if random.randint(0,1) == 1:
                 inventory.remove(used_item)
         elif used_item == "Sword" and len(bad_guys) > 0:
             victim = random.choice(bad_guys)
-            print("  "+random.choice(good_guys)+" attacked "+victim+" with a sword.", end=" ")
+            storyprint("  "+random.choice(good_guys)+" attacked "+victim+" with a sword.", " ")
             if random.randint(0,1) == 1:
-                print("Direct hit!", end=" ")
+                storyprint("Direct hit!", " ")
                 if random.randint(0,1) == 1:
                     bad_guys.remove(victim)
-                    print(victim+" was defeated.")
+                    storyprint(victim+" was defeated.", "\n")
                 if random.randint(0,1) == 1:
-                    print("The sword shattered.")
+                    storyprint("The sword shattered.", "\n")
                     inventory.remove(used_item)
                 else:
                     print("")
             else:
-                print("Missed..")
+                storyprint("Missed..", "\n")
         elif used_item == "computer":
             print(" ", end=" ")
             if random.randint(0,1) ==1 and len(inactive_good_guys) > 0:
                 visitor = random.choice(inactive_good_guys)
-                print(random.choice(good_guys)+" sent an email to "+visitor+".")
+                storyprint(random.choice(good_guys)+" sent an email to "+visitor+".", "\n")
                 if random.randint(0,1) == 1:
-                      print("  Later, "+visitor+" came.")
+                      storyprint("  Later, "+visitor+" came.", "\n")
                       inactive_good_guys.remove(visitor)
                       good_guys.append(visitor)
                 else:
-                    print("  Later, nobody came.")
+                    storyprint("  Later, nobody came.", "\n")
             else:
                 if 'Python Programming book' in inventory:
-                    print(random.choice(good_guys)+" was programming in Python.")
+                    storyprint(random.choice(good_guys)+" was programming in Python.", "\n")
                 else:
-                    print(random.choice(good_guys)+" used their computer to do stuff, like planning on what to do next.")
+                    storyprint(random.choice(good_guys)+" used their computer to do stuff, like planning on what to do next.", "\n")
             if random.randint(0,1) == 1:
-                print("  Later, the computer stopped working.")
+                storyprint("  Later, the computer stopped working.", "\n")
                 if used_item in inventory:
                     inventory.remove(used_item)
         elif used_item == "Cell phone" and len(inactive_good_guys) > 0:
             visitor = random.choice(inactive_good_guys)
-            print("  "+random.choice(good_guys),"used his/her cell phone to call "+visitor+" to come over to "+place+" with the good guy"+is_plural(good_guys)+".")
+            storyprint("  "+random.choice(good_guys),"used his/her cell phone to call "+visitor+" to come over to "+place+" with the good guy"+is_plural(good_guys)+".", "\n")
             if random.randint(0,1) == 1:
-                print("  Later, "+visitor+" came!")
+                storyprint("  Later, "+visitor+" came!", "\n")
                 inactive_good_guys.remove(visitor)
                 good_guys.append(visitor)
             else:
-                print("  Later, nobody came.")
+                storyprint("  Later, nobody came.", "\n")
             if random.randint(0,1) == 1:
-                print("  The cell phone stopped working.")
+                storyprint("  The cell phone stopped working.", "\n")
                 inventory.remove(used_item)
         elif used_item == "Ladder":
-            print("  The good guy"+is_plural(good_guys)+" used a ladder to climb out of "+place+".")
+            storyprint("  The good guy"+is_plural(good_guys)+" used a ladder to climb out of "+place+".", "\n")
             NewPlace()
-            print("  The good guy"+is_plural(good_guys),were_was(good_guys)+" now at "+place+".")
+            storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".", "\n")
             if len(bad_guys) > 0:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
         elif used_item == "Camera":
-            print("  The good guy"+is_plural(good_guys)+" took a picture of", end=" ")
+            storyprint("  The good guy"+is_plural(good_guys)+" took a picture of", " ")
             if len(bad_guys) > 0 and random.randint(0,1) == 1:
-                print(random.choice(bad_guys)+".")
+                storyprint(random.choice(bad_guys)+".", "\n")
             elif len(inventory) > 0 and random.randint(0,1) == 1:
-                print(random.choice(inventory)+".")
+                storyprint(random.choice(inventory)+".", "\n")
             elif random.randint(0,1) == 1:
-                print(place+".")
+                storyprint(place+".", "\n")
             else:
-                print(random.choice(good_guys)+".")
+                storyprint(random.choice(good_guys)+".", "\n")
             if random.randint(0,1) == 1:
-                reasons_to_stop = ("  The camera stopped working.", "  Somebody lost the camera.", "  The camera's SD card ran out of room", "  The camera's batteries ran out.")
-                print(random.choice(reasons_to_stop))
+                reasons_to_stop = ("  The camera stopped working.", "  Somebody lost the camera.", "  The camera's SD card ran out of room", "  The camera's batteries ran out.", "  The camera ran out of film.")
+                storyprint(random.choice(reasons_to_stop), "\n")
                 inventory.remove(used_item)
         elif used_item == "Music player":
-            print("  The good guy"+is_plural(good_guys)+" listened to some music.")
+            storyprint("  The good guy"+is_plural(good_guys)+" listened to some music.", "\n")
             if len(inactive_bad_guys) > 0 and random.randint(0,1) == 1:
-                print("  The bad guys"+is_plural(inactive_bad_guys)+" heard the music and rushed over to the good guy"+is_plural(good_guys)+" and their music.")
+                storyprint("  The bad guys"+is_plural(inactive_bad_guys)+" heard the music and rushed over to the good guy"+is_plural(good_guys)+" and their music.", "\n")
                 bad_guys.extend(inactive_bad_guys)
                 inactive_bad_guys.clear()
             if random.randint(0,1) == 1:
-                print("  Soon, the music stopped. It was because the music player stopped working.")
+                storyprint("  Soon, the music stopped. It was because the music player stopped working.", "\n")
                 inventory.remove(used_item)
         elif used_item == "Science kit":
             user = random.choice(good_guys)
-            print("  "+user+ " did some science-y stuff with his/her science kit.", end=" ")
+            storyprint("  "+user+ " did some science-y stuff with his/her science kit.", " ")
             if random.randint(0,1) == 1 and len(bad_guys) > 0:
-                print(user+" made some slime, with it. ", end='')
+                storyprint(user+" made some slime, with it. ", '')
                 if random.randint(0,1) == 1:
-                    print("The bad guy"+is_plural(bad_guys)+" got stuck in that slime and they suffocated in it.")
+                    storyprint("The bad guy"+is_plural(bad_guys)+" got stuck in that slime and they suffocated in it.", "\n")
                     bad_guys.clear()
                 else:
                     victim = random.choice(bad_guys)
-                    print(victim+" got stuck in slime and he/she suffocated in it.")
+                    storyprint(victim+" got stuck in slime and he/she suffocated in it.", "\n")
                     bad_guys.remove(victim)
             else:
                 print(" ",end=" ")
                 NewPlace()
-                print("  The good guy"+is_plural(good_guys)+" made a cannon using baking soda and vinegar, and they got blasted away to "+place+".")
+                storyprint("  The good guy"+is_plural(good_guys)+" made a cannon using baking soda and vinegar, and they got blasted away to "+place+".", "\n")
                 if len(bad_guys) > 0:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
             if random.randint(0,1) == 1:
-                print("  The good guy"+is_plural(good_guys)+" used the last of their science kit.")
+                storyprint("  The good guy"+is_plural(good_guys)+" used the last of their science kit.", "\n")
                 inventory.remove(used_item)
         elif used_item == "Calculator":
-            print("  "+random.choice(good_guys)+" did some math on a calculator.", end=" ")
+            storyprint("  "+random.choice(good_guys)+" did some math on a calculator.", " ")
             total_bads = len(bad_guys) + len(inactive_bad_guys)
             total_goods = len(good_guys) + len(inactive_good_guys)
             if total_bads > total_goods:
-                print("According to their calculations, the good guy", end="")
+                storyprint("According to their calculations, the good guy", "")
                 if total_goods > 1:
-                    print("s were outnumbered. There were "+str(total_goods)+" good guys", end=" ")
+                    storyprint("s were outnumbered. There were "+str(total_goods)+" good guys", " ")
                 else:
-                    print(" was outnumbered. There was only one good guy", end=" ")
-                print(" and there were "+str(total_bads)+" bad guys.")
+                    storyprint(" was outnumbered. There was only one good guy", " ")
+                storyprint(" and there were "+str(total_bads)+" bad guys.")
             elif total_goods > total_bads and total_bads > 0:
-                print("According to their calculations, the bad guy", end="")
+                storyprint("According to their calculations, the bad guy", "")
                 if total_bads > 1:
-                    print("s were outnumbered. There were "+str(total_bads)+" bad guys", end=" ")
+                    storyprint("s were outnumbered. There were "+str(total_bads)+" bad guys", " ")
                 else:
-                    print(" was outnumbered. There was only one bad guy", end=" ")
-                print(" and there were "+str(total_goods)+" good guys.")
+                    storyprint(" was outnumbered. There was only one bad guy", " ")
+                storyprint(" and there were "+str(total_goods)+" good guys.", "\n")
             else:
-                print("There were "+str(len(good_guys))+" good guy"+is_plural(good_guys)+" at "+place+". Counting the good guy"+is_plural(inactive_good_guys)+" that weren't there, "+str(total_goods)+" good guys overall.\n  The good guy"+is_plural(good_guys)+" had "+str(len(inventory))+" items.", end="")
+                storyprint("There were "+str(len(good_guys))+" good guy"+is_plural(good_guys)+" at "+place+". Counting the good guy"+is_plural(inactive_good_guys)+" that weren't there, "+str(total_goods)+" good guys overall.\n  The good guy"+is_plural(good_guys)+" had "+str(len(inventory))+" items.", "")
                 if len(active_vehicles) > 0:
-                    print("The good guy"+is_plural(good_guys)+" had "+str(len(active_vehicles))+" vehicles.")
+                    storyprint("The good guy"+is_plural(good_guys)+" had "+str(len(active_vehicles))+" vehicles.", "\n")
                 else:
                     print('')
             a = random.randint(1, 100)
             b = random.randint(1, 100)
             print(' ', end=" ")
             if random.randint(0,3) == 3:
-                    print("Also, "+str(a)+" + "+str(b)+" = "+str(a+b)+".")
+                    storyprint("Also, "+str(a)+" + "+str(b)+" = "+str(a+b)+".", "\n")
             elif random.randint(0,2) == 2:
-                print("Also, "+str(a)+" - "+str(b)+" = "+str(a-b)+".")
+                storyprint("Also, "+str(a)+" - "+str(b)+" = "+str(a-b)+".", "\n")
             elif random.randint(0,1) == 1:
-                print("Also, "+str(a)+" times "+str(b)+" is equal to "+str(a*b)+".")
+                storyprint("Also, "+str(a)+" times "+str(b)+" is equal to "+str(a*b)+".", "\n")
             else:
-                print("Also, "+str(a)+" divided by "+str(b)+" is equal to "+str(a//b), end="")
+                storyprint("Also, "+str(a)+" divided by "+str(b)+" is equal to "+str(a//b), "")
                 if a % b == 0:
                     print(".")
                 else:
-                    print(" with a remainder of "+str(a%b)+".")
+                    storyprint(" with a remainder of "+str(a%b)+".", "\n")
             if random.randint(0,1) == 1:
-                print("  Later, the calculator stopped working.")
+                storyprint("  Later, the calculator stopped working.", "\n")
                 inventory.remove(used_item)
         elif used_item == "Computer book":
-            print("  The good guy"+is_plural(good_guys)+" read about computers because they wanted to read something, and they somehow had that book. Now, they knew more about computers.")
+            storyprint("  The good guy"+is_plural(good_guys)+" read about computers because they wanted to read something, and they somehow had that book. Now, they knew more about computers.", "\n")
         elif used_item == "Python Programming book":
-            print("  The good guy"+is_plural(good_guys)+" read about Python programming because they wanted to read something, and they had that book. Now, they knew more about programming in Python.")
+            storyprint("  The good guy"+is_plural(good_guys)+" read about Python programming because they wanted to read something, and they had that book. Now, they knew more about programming in Python.", "\n")
 def get_vehicle():
     """Gives the good guys a vehicle to travel with.\nIt is true that the good guys can travel anywhere on foot, but that would be hard in real life."""
     global Vehicles
@@ -1698,30 +1702,30 @@ def get_vehicle():
         new_vehicle = random.choice(Vehicles)
     print(' ',end=' ')
     if r == 1:
-        print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" shopping for a " + new_vehicle + ".", end=" ")
+        storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" shopping for a " + new_vehicle + ".", " ")
         if "money" in inventory and random.randint(0,1) == 1:
             if random.randint(0,1) ==1:
-                print("The good guys found it and bought it.")
+                storyprint("The good guys found it and bought it.", "\n")
                 active_vehicles.append(new_vehicle)
             else:
-                print("They didn't find one.")
+                storyprint("They didn't find one.", "\n")
         else:
             if random.randint(0,1) == 1:
-                print("They found one, but they didn't have enough money.")
+                storyprint("They found one, but they didn't have enough money.", "\n")
             else:
-                print("They didn't find one. Besides, they didn't have enough money for one anyway.")
+                storyprint("They didn't find one. Besides, they didn't have enough money for one anyway.", "\n")
     else:
-        print("The good guy"+is_plural(good_guys)+" found an abandoned "+new_vehicle+".", end=" ")
+        storyprint("The good guy"+is_plural(good_guys)+" found an abandoned "+new_vehicle+".", " ")
         if random.randint(0,1) ==1:
-            print("It worked. So, the good guy"+is_plural(good_guys)+" took it.")
+            storyprint("It worked. So, the good guy"+is_plural(good_guys)+" took it.", "\n")
             active_vehicles.append(new_vehicle)
         else:
-            print("It was broken.", end=" ")
+            storyprint("It was broken.", " ")
             if random.randint(0,1) ==1:
-                print("But "+random.choice(good_guys)+" fixed it. Now, the good guy"+is_plural(good_guys)+" got the "+new_vehicle+".")
+                storyprint("But "+random.choice(good_guys)+" fixed it. Now, the good guy"+is_plural(good_guys)+" got the "+new_vehicle+".", "\n")
                 active_vehicles.append(new_vehicle)
             else:
-                print("It was no good. Nobody could fix it. So, the good guy"+is_plural(good_guys)+" left it behind.")
+                storyprint("It was no good. Nobody could fix it. So, the good guy"+is_plural(good_guys)+" left it behind.", "\n")
 def get_tool():
     """Gives the good guys a tool."""
     global Tools
@@ -1744,16 +1748,16 @@ def get_tool():
         new_tool = random.choice(Tools)
     print(' ',end=' ')
     if random.randint(0, 1) == 1 and "money" in inventory:
-        print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" shopping. They found (a) " +new_tool+".",end=" ")
+        storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" shopping. They found (a) " +new_tool+"."," ")
         if random.randint(0,2) != 2:
             inventory.append(new_tool)
             if random.randint(0,1) == 1:
                 inventory.remove("money")
-            print("The good guy"+is_plural(good_guys)+" got it.")
+            storyprint("The good guy"+is_plural(good_guys)+" got it.", "\n")
         else:
-            print("But they didn't have enough money.")
+            storyprint("But they didn't have enough money.", "\n")
     else:
-        print("The good guy"+is_plural(good_guys)+" found (a) "+new_tool+".")
+        storyprint("The good guy"+is_plural(good_guys)+" found (a) "+new_tool+".", "\n")
         inventory.append(new_tool)
     goal_check() #Just in case if somebody had already finished the goal all along.
 def new_guy():
@@ -1764,9 +1768,9 @@ def new_guy():
     introduce(good_guys, True)
     print(' ',end=' ')
     if random.randint(0,1) == 1:
-        print(good_guys[-1]+" came over and joined the good guy(s).")
+        storyprint(good_guys[-1]+" came over and joined the good guy(s).", "\n")
     else:
-        print("The good guy(s) met "+good_guys[-1]+".")
+        storyprint("The good guy(s) met "+good_guys[-1]+".", "\n")
 def goal_check():
     """Checks if any goals are completed."""
     global goals
@@ -1839,12 +1843,12 @@ def goal_check():
         inventory.append(new_prize)
         if new_prize == "kiss":
                         introduce(good_guys, True)
-        print("  The good guy"+is_plural(good_guys)+" got (a)", end=" ")
+        storyprint("  The good guy"+is_plural(good_guys)+" got (a)", " ")
         if new_prize == "kiss":
-            print(" kiss(es) from " + good_guys[-1], end=" ")
+            storyprint(" kiss(es) from " + good_guys[-1], " ")
         else:
-            print(new_prize,end=" ")
-        print("for "+verb+" "+subject+".")
+            storyprint(new_prize," ")
+        storyprint("for "+verb+" "+subject+".", "\n")
 def goal_resolve():
     """This function resolves a goal if there are any goals."""
     global goals
@@ -1869,7 +1873,7 @@ def goal_resolve():
         print(' ',end=' ')
         if solved_goal.startswith("Meet"):
             subject = solved_goal.replace("Meet ", "")
-            print("The good guy"+is_plural(good_guys)+" met "+subject+".")
+            storyprint("The good guy"+is_plural(good_guys)+" met "+subject+".", "\n")
             good_guys.append(subject)
             if subject in inactive_good_guys:
                 inactive_good_guys.remove(subject)
@@ -1878,43 +1882,43 @@ def goal_resolve():
             if place == subject:
                 while place == subject:
                     NewPlace()
-                print("  The good guy"+is_plural(good_guys)+" left "+subject+". They were now at "+place+".")
+                storyprint("  The good guy"+is_plural(good_guys)+" left "+subject+". They were now at "+place+".", "\n")
         elif solved_goal.startswith("Take") or solved_goal.startswith("Destroy"):
             if solved_goal.startswith("Take"):
                 subject = solved_goal.replace("Take ", "")
             else:
                 subject = solved_goal.replace("Destroy ", "")
-            print("The good guys found (a) "+subject, end="")
+            storyprint("The good guys found (a) "+subject,"")
             if random.randint(0,1) == 1:
-                print(" at a store.", end=' ')
+                storyprint(" at a store.", ' ')
                 if "money" in inventory:
-                    print("The good guy"+is_plural(good_guys)+" bought it.", end=" ")
+                    storyprint("The good guy"+is_plural(good_guys)+" bought it.", " ")
                     inventory.append(subject)
                 else:
-                    print("The good guy"+is_plural(good_guys)+" didn't have any money. Now, their goal was to find some money.", end=" ")
+                    storyprint("The good guy"+is_plural(good_guys)+" didn't have any money. Now, their goal was to find some money.", " ")
                     goals.append("Take money")
                     solved = False
             else:
-                    print(". The good guy"+is_plural(good_guys)+" got it.", end=" ")
+                    storyprint(". The good guy"+is_plural(good_guys)+" got it.", " ")
                     inventory.append(subject)
             if subject in inventory and solved_goal.startswith("Destroy"):
-                print("The good guy"+is_plural(good_guys)+" also destroyed it.")
+                storyprint("The good guy"+is_plural(good_guys)+" also destroyed it.", "\n")
                 inventory.remove(subject)
             else:
                 print('')
         else:
             subject = solved_goal.replace("Visit ", "")
             if subject == "Outer space" and not "Rocket ship" in inventory:
-                print("The good guy"+is_plural(good_guys)+" needed a rocket ship to go to space.", end=" ")
+                storyprint("The good guy"+is_plural(good_guys)+" needed a rocket ship to go to space.", " ")
                 if random.randint(0,1) == 1:
-                    print("They ended up finding a rocket ship that they could use. So, they blasted off into space")
+                    storyprint("They ended up finding a rocket ship that they could use. So, they blasted off into space!", "\n")
                     active_vehicles.append("Rocket ship")
                     place = subject
                 else:
                     print('')
             else:
                 place = subject
-                print("The good guy"+is_plural(good_guys)+" went to "+subject+".")
+                storyprint("The good guy"+is_plural(good_guys)+" went to "+subject+".", "\n")
     goal_check()
 #Bad events
 def hunger():
@@ -1934,28 +1938,28 @@ def hunger():
         victim = "The good guys"
     else:
         victim = random.choice(good_guys)
-    print("  "+victim+" got hungry.", end=" ")
+    storyprint("  "+victim+" got hungry.", " ")
     if victim == "The good guys":
-            print("They", end=" ")
+            storyprint("They", " ")
     else:
-            print("He/she",end=" ")
+            storyprint("He/she"," ")
     if "Food" in inventory:
-        print("had some {}(s) to eat.".format(food))
+        storyprint("had some {}(s) to eat.".format(food), "\n")
         if victim == "The good guys" or random.randint(0,1) == 1:
             inventory.remove("Food")
     elif "money" in inventory:
-        print("had some money. They bought some {}(s) to eat.".format(food))
+        storyprint("had some money. They bought some {}(s) to eat.".format(food), "\n")
         if random.randint(0,1) == 1:
             inventory.remove("money")
     else:
         if random.randint(0,1):
-            print("fasted.")
+            storyprint("fasted.", "\n")
         elif random.randint(0,1) == 1 and len(inventory) > 0:
             item = random.choice(inventory)
-            print("ate their "+item+".")
+            storyprint("ate their "+item+".", "\n")
             inventory.remove(item)
         else:
-            print(random.choice(death_terms)+" from hunger.")
+            storyprint(random.choice(death_terms)+" from hunger.", "\n")
             if victim == "The good guys":
                 good_guys.clear()
                 good_guy_check()
@@ -1972,17 +1976,17 @@ def destroy_vehicle():
         wrecked_vehicle = random.choice(active_vehicles)
         active_vehicles.remove(wrecked_vehicle)
         if random.randint(0,1) == 1 and wrecked_vehicle != "Horse":
-            print("Suddenly, the good guy"+is_plural(good_guys)+"'s "+wrecked_vehicle+" broke down.")
+            storyprint("Suddenly, the good guy"+is_plural(good_guys)+"'s "+wrecked_vehicle+" broke down.", "\n")
         elif wrecked_vehicle == "Horse":
-            print("The good guy"+is_plural(good_guys)+"'s horse "+random.choice(death_terms)+".")
+            storyprint("The good guy"+is_plural(good_guys)+"'s horse "+random.choice(death_terms)+".", "\n")
         else:
-            print("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" riding in their "+wrecked_vehicle+". Suddenly, it crashed.", end=' ')
+            storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" riding in their "+wrecked_vehicle+". Suddenly, it crashed.", ' ')
             if random.randint(0,1) == 1:
                 victim = random.choice(good_guys)
-                print(victim,random.choice(death_terms),"when the "+wrecked_vehicle,"crashed.")
+                storyprint(victim+" "+random.choice(death_terms)+" when the "+wrecked_vehicle+" crashed.", "\n")
                 good_guys.remove(victim)
             else:
-                print("Luckily, nobody was hurt.")
+                storyprint("Luckily, nobody was hurt.", "\n")
 def lose_item():
     global inventory
     global good_guys
@@ -1993,15 +1997,15 @@ def lose_item():
         inventory.remove(lost_item)
         print(' ',end=' ')
         if random.randint(0,2) == 1 and len(bad_guys) > 0:
-            print(random.choice(bad_guys)+" stole (a) "+lost_item+" from the good guy"+is_plural(good_guys)+".", end=" ")
+            storyprint(random.choice(bad_guys)+" stole (a) "+lost_item+" from the good guy"+is_plural(good_guys)+".", " ")
             if random.randint(0,1) == 1:
-                print("he/she destroyed the "+lost_item+".")
+                storyprint("he/she destroyed the "+lost_item+".", "\n")
             else:
                 print('')
         elif random.randint(0,1) == 1:
-            print("The good guy"+is_plural(good_guys)+"'s "+lost_item+" broke.")
+            storyprint("The good guy"+is_plural(good_guys)+"'s "+lost_item+" broke.", "\n")
         else:
-            print("The good guy"+is_plural(good_guys)+" lost their "+lost_item+".")
+            storyprint("The good guy"+is_plural(good_guys)+" lost their "+lost_item+".", "\n")
 def natural_disaster():
     """Makes a random natural disaster happen."""
     global place
@@ -2018,10 +2022,10 @@ def natural_disaster():
     start = random.choice(starts)
     safe = False
     if disaster == 0:
-        print(start,"there was an earthquake.")
+        storyprint(start+" there was an earthquake.", "\n")
         if PlaceTypes[place] == "indoors":
             if random.randint(0,1) == 1:
-                print("  The good guy"+is_plural(good_guys)+" hid under a doorway.")
+                storyprint("  The good guy"+is_plural(good_guys)+" hid under a doorway.", "\n")
                 safe = True
         if PlaceTypes[place] == "outdoors" and random.randint(0,1) == 1:
             safe = True
@@ -2030,39 +2034,39 @@ def natural_disaster():
                 if len(good_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(good_guys)
                     good_guys.remove(victim)
-                    print("  "+victim,random.choice(death_terms),"from being crushed by falling building parts.")
+                    storyprint("  "+victim+" "+random.choice(death_terms)+" from being crushed by falling building parts.", "\n")
         if len(bad_guys) > 1 and random.randint(0,1) == 1:
             for x in range(random.randint(1,len(bad_guys))):
                 if len(bad_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(bad_guys)
                     bad_guys.remove(victim)
-                    print("  "+victim,random.choice(death_terms),"from being crushed by falling building parts.")
-        print("  Later, the earthquake stopped.")
+                    storyprint("  "+victim+" "+random.choice(death_terms)+" from being crushed by falling building parts.", "\n")
+        storyprint("  Later, the earthquake stopped.", "\n")
     elif disaster == 1:
-        print(start,place,"got flooded!")
+        storyprint(start+" "+place+" got flooded!", "\n")
         if random.randint(0,1) == 1:
             place = "the Open ocean"
-            print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" washed away to sea.")
+            storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" washed away to sea.", "\n")
         if safe == False and random.randint(0,2) != 1 and len(good_guys) > 1:
             for x in range(random.randint(1,len(good_guys))):
                 if len(good_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(good_guys)
                     if not 'diver' in victim.lower() or not "fish" in victim.lower():
                         good_guys.remove(victim)
-                        print("  "+victim,"drowned.")
+                        storyprint("  "+victim+" drowned.", "\n")
         if len(bad_guys) > 1 and random.randint(0,1) == 1:
             for x in range(random.randint(1,len(bad_guys))):
                 if len(bad_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(bad_guys)
                     if not 'diver' in victim.lower() or not "fish" in victim.lower():
                         bad_guys.remove(victim)
-                        print("  "+victim,"drowned.")
+                        storyprint("  "+victim+" drowned.", "\n")
         if place != "the Open ocean":
-            print("  The waters went down.")
+            storyprint("  The waters went down.", "\n")
             NewPlace()
-            print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".")
+            storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".", "\n")
     elif disaster == 2:
-        print(start,"a tornado appeared!")
+        storyprint(start+" a tornado appeared!", "\n")
         if PlaceTypes[place] == "outdoors" and random.randint(0,1) == 1:
             safe = True
         if safe == False and random.randint(0,2) != 1 and len(good_guys) > 1:
@@ -2070,34 +2074,34 @@ def natural_disaster():
                 if len(good_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(good_guys)
                     good_guys.remove(victim)
-                    print('  '+victim,"got sucked up by the tornado.")
+                    storyprint('  '+victim+" got sucked up by the tornado.", "\n")
         if len(bad_guys) > 1 and random.randint(0,1) == 1:
             for x in range(random.randint(1,len(bad_guys))):
                 if len(bad_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(bad_guys)
                     bad_guys.remove(victim)
-                    print("  "+victim,"got sucked up by the tornado.")
+                    storyprint("  "+victim+" got sucked up by the tornado.", "\n")
         if safe == False and random.randint(0,2) != 1 and len(good_guys) > 1:
             for x in range(random.randint(1,len(good_guys))):
                 if len(good_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(good_guys)
                     good_guys.remove(victim)
-                    print("  "+victim,random.choice(death_terms),"from being crushed by falling building parts.")
+                    storyprint("  "+victim+" "+random.choice(death_terms)+" from being crushed by falling building parts.", "\n")
         if len(bad_guys) > 1 and random.randint(0,1) == 1:
             for x in range(random.randint(1,len(bad_guys))):
                 if len(bad_guys) > 0 and random.randint(0,1) == 1:
                     victim = random.choice(bad_guys)
                     bad_guys.remove(victim)
-                    print("  "+victim,random.choice(death_terms),"from being crushed by falling building parts.")
+                    storyprint("  "+victim+" "+random.choice(death_terms)+" from being crushed by falling building parts.", "\n")
         if random.randint(0,4) > 0:
-            print("  That tornado destroyed the {}.".format(place))
+            storyprint("  That tornado destroyed the {}.".format(place), "\n")
             NewPlace()
-            print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".")
-        print("  Later, the tornado was no more.")
+            storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" now at "+place+".", "\n")
+        storyprint("  Later, the tornado was no more.", "\n")
     elif disaster == 3:
-        print(start,"it was raining, and our heroes heard thunder!", end=' ')
+        storyprint(start+" it was raining, and our heroes heard thunder!", ' ')
         if PlaceTypes[place] != "indoors":
-            print("The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.")
+            storyprint("The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.", "\n")
             x = 0
             rep = random.randint(3, 5)
             while x < rep or PlaceTypes[place] != "indoors":
@@ -2105,97 +2109,97 @@ def natural_disaster():
                 if len(bad_guys) > 0:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
-                print("  They went to "+place+".", end=" ")
+                storyprint("  They went to "+place+".", " ")
                 if PlaceTypes[place] == "outdoors":
-                    print("But they weren't out of the rain yet.")
+                    storyprint("But they weren't out of the rain yet.", "\n")
                 else:
                     safe = True
-                    print("The good guy"+is_plural(good_guys),were_was(good_guys)+" safe from the storm.")
+                    storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" safe from the storm.", "\n")
                 x += 1
             if safe == False and random.randint(0, 10) == 10:
                     victim = random.choice(good_guys)
-                    print("  "+victim+" was struck by lightning.")
+                    storyprint("  "+victim+" was struck by lightning.", "\n")
                     good_guys.remove(victim)
         else:
-            print('Good thing they were inside.')
-        print("  Later, the storm passed.")
+            storyprint('Good thing they were inside.', "\n")
+        storyprint("  Later, the storm passed.", "\n")
     elif disaster == 4:
-        print(start,"a volcano erupted! The good guy"+is_plural(good_guys)+" tried to outrun the lava.")
+        storyprint(start+" a volcano erupted! The good guy"+is_plural(good_guys)+" tried to outrun the lava.", "\n")
         if len(good_guys) > 1:
             for x in range(random.randint(1, len(good_guys))):
                 if random.randint(0,1) == 1 and len(good_guys) > 0:
                     if len(good_guys) > 0 and random.randint(0,1) == 1:
                         victim = random.choice(good_guys)
-                        print("  "+victim+" tried to outrun the lava, but he/she was consumed by the lava.")
+                        storyprint("  "+victim+" tried to outrun the lava, but he/she was consumed by the lava.", "\n")
                         good_guys.remove(victim)
         if len(bad_guys) > 1:
             for x in range(random.randint(1, len(bad_guys))):
                 if random.randint(0,1) == 1 and len(bad_guys) > 0:
                     if len(bad_guys) > 0 and random.randint(0,1) == 1:
                         victim = random.choice(bad_guys)
-                        print("  "+victim+" tried to outrun the lava, but he/she was consumed by the lava.")
+                        storyprint("  "+victim+" tried to outrun the lava, but he/she was consumed by the lava.", "\n")
                         bad_guys.remove(victim)
         NewPlace()
         if len(good_guys) == 0:
-            print("  "+place+".")
+            storyprint("  "+place+".", "\n")
             good_guy_check()
         else:
-            print("  The good guy"+is_plural(good_guys)+" outran the lava.", end=" ")
+            storyprint("  The good guy"+is_plural(good_guys)+" outran the lava.", " ")
             if len(bad_guys) > 0:
-                print("The bad guy"+is_plural(bad_guys)+" outran the lava, too.", end=' ')
-            print("They were now at "+place+".")
+                storyprint("The bad guy"+is_plural(bad_guys)+" outran the lava, too.", ' ')
+            storyprint("They were now at "+place+".", "\n")
     elif disaster == 5:
-        print(start,"a blizzard blew in!", end=" ")
+        storyprint(start+" a blizzard blew in!", " ")
         if PlaceTypes[place] != "indoors":
-            print("The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.")
+            storyprint("The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.", "\n")
             NewPlace()
             if len(bad_guys) > 0:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
-            print("  They went to "+place+".", end=" ")
+            storyprint("  They went to "+place+".", " ")
             if PlaceTypes[place] == "indoors":
-                    print("They were safe.")
+                    storyprint("They were safe.", "\n")
                     safe = True
             else:
-                print("They were still in the storm.")
+                storyprint("They were still in the storm.", "\n")
         else:
-                    print("The good guy"+is_plural(good_guys),were_was(good_guys)+" safe.")
+                    storyprint("The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" safe.", "\n")
                     safe = True
         if len(good_guys) > 1:
             for x in range(0, random.randint(1, len(good_guys))):
                 if safe == False and random.randint(0, 2) == 0 and len(good_guys) > 0:
                         victim = random.choice(good_guys)
-                        print("  "+victim,random.choice(death_terms),"from frostbite.")
+                        storyprint("  "+victim+" "+random.choice(death_terms)+" from frostbite.", "\n")
                         good_guys.remove(victim)
-        print("  Later, the snowstorm passed.")
+        storyprint("  Later, the snowstorm passed.", "\n")
     else:
-        print(start,"hailstones fell!")
+        storyprint(start+" hailstones fell!", "\n")
         if PlaceTypes[place] == "outdoors":
-            print("  The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.")
+            storyprint("  The good guy"+is_plural(good_guys)+" needed to find a place to wait out the storm in.", "\n")
             NewPlace()
             if len(bad_guys) > 0:
                     inactive_bad_guys.extend(bad_guys)
                     bad_guys.clear()
-            print("They went to "+place+".", end=' ')
+            storyprint("They went to "+place+".", ' ')
             if PlaceTypes[place] != "outdoors":
                 if random.randint(0,5) < 5:
-                    print("They were safe.")
+                    storyprint("They were safe.", "\n")
                     safe = True
                 else:
                     print('')
-                    print(random.choice(starts)+" a hailstone crashed through the roof.")
+                    storyprint(random.choice(starts)+" a hailstone crashed through the roof.", "\n")
             else:
-                print("They were still in the hailstorm.")
+                storyprint("They were still in the hailstorm.", "\n")
         else:
-                    print("  The good guy"+is_plural(good_guys),were_was(good_guys)+" safe because they were in "+place+".")
+                    storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+" safe because they were in "+place+".", "\n")
                     safe = True
         if len(good_guys) > 1:
             for x in range(0, random.randint(1, len(good_guys))):
                 if safe == False and random.randint(0, 2) == 0 and len(good_guys) > 0:
                         victim = random.choice(good_guys)
-                        print("  "+victim+" was struck by a hailstone.")
+                        storyprint("  "+victim+" was struck by a hailstone.", "\n")
                         good_guys.remove(victim)
-        print("  Later, the hailstones stopped falling.")
+        storyprint("  Later, the hailstones stopped falling.", "\n")
 def trapped():
     """A good guy gets trapped in this function."""
     global good_guys
@@ -2211,40 +2215,40 @@ def trapped():
         victim = "The good guys"
     else:
         victim = random.choice(good_guys)
-    print("  "+victim+" got trapped in", end=" ")
+    storyprint("  "+victim+" got trapped in", " ")
     if random.randint(0,1) ==1 and PlaceTypes[place] == "indoors":
-        print("a room.")
+        storyprint("a room.", "\n")
         trap = "room"
     else:
-        print("a cage.")
+        storyprint("a cage.", "\n")
         trap = "cage"
     if "Key" in inventory:
-        print("  "+random.choice(good_guys)+" tried to unlock the door to the "+trap+" with a key.", end=' ')
+        storyprint("  "+random.choice(good_guys)+" tried to unlock the door to the "+trap+" with a key.", ' ')
         if random.randint(0,1) == 1:
             free = True
-            print("The door was unlocked! ",end="")
+            storyprint("The door was unlocked! ","")
             if victim == "The good guys":
-                print("The good guys were free.")
+                storyprint("The good guys were free.", "\n")
             else:
-                print(victim+" was free.")
+                storyprint(victim+" was free.", "\n")
         elif random.randint(0,1) == 1:
-            print("The key didn't fit in the lock.")
+            storyprint("The key didn't fit in the lock.", "\n")
         else:
-            print("The key fit the lock, but the door didn't unlock.")
+            storyprint("The key fit the lock, but the door didn't unlock.", "\n")
     if random.randint(0,1) == 1 and len(inventory) > 1 and free == False:
-        print("  "+random.choice(good_guys)+" tried to release "+victim+" from the "+trap+" using (a) "+random.choice(inventory)+".",end=" ")
+        storyprint("  "+random.choice(good_guys)+" tried to release "+victim+" from the "+trap+" using (a) "+random.choice(inventory)+"."," ")
         if random.randint(0,1) == 1:
-            print("It worked.",end=' ')
+            storyprint("It worked.",' ')
             if victim == "The good guys":
-                print("The good guys were free.")
+                storyprint("The good guys were free.", "\n")
             else:
-                print(victim+" was free.")
+                storyprint(victim+" was free.", "\n")
             free = True
         else:
-            print("It didn't work.")
+            storyprint("It didn't work.", "\n")
     if victim == "The good guys" and free == False:
         NewPlace()
-        print("  Meanwhile, at "+place+", ", end="")
+        storyprint("  Meanwhile, at "+place+", ", "")
         if len(inactive_good_guys) > 0:
             in_between = inactive_good_guys
             inactive_good_guys = good_guys
@@ -2257,7 +2261,7 @@ def trapped():
         list_party(good_guys, "there were")
         last_list = "party"
     elif free == False and victim != "The good guys":
-        print("  The other good guy(s) had to leave "+victim+" behind.")
+        storyprint("  The other good guy(s) had to leave "+victim+" behind.", "\n")
         good_guys.remove(victim)
         inactive_good_guys.append(victim)
 def lost():
@@ -2272,52 +2276,51 @@ def lost():
     good_guy_check()
     print(' ',end=' ')
     if place == "a Forest":
-        print("The good guy"+is_plural(good_guys)+" turned around and found that they were lost in the woods.")
+        storyprint("The good guy"+is_plural(good_guys)+" turned around and found that they were lost in the woods.", "\n")
     else:
-        print("The good guy"+is_plural(good_guys)+" got lost and they didn't know where to go.")
+        storyprint("The good guy"+is_plural(good_guys)+" got lost and they didn't know where to go.", "\n")
     rep = random.randint(1, 10)
     for c in range(rep):
         evnt = random.randint(0, 6)
-        print("  The good guy"+is_plural(good_guys)+" wandered around", end=" ")
+        storyprint("  The good guy"+is_plural(good_guys)+" wandered around", " ")
         if PlaceTypes[place] == "indoors":
-            print("the hallways of", end=" ")
-        print("(the) "+place+".")
+            storyprint("the hallways of", " ")
+        storyprint("(the) "+place+".", "\n")
         if evnt == 1 and len(good_guys) > 1:
             convertee = random.choice(good_guys)
-            print("  "+convertee+" wandered off.")
+            storyprint("  "+convertee+" wandered off.", "\n")
             good_guys.remove(convertee)
             inactive_good_guys.append(convertee)
         elif evnt == 2 and len(inactive_good_guys) > 0:
             convertee = random.choice(inactive_good_guys)
-            print("  The good guy"+is_plural(good_guys)+" found "+convertee+".")
+            storyprint("  The good guy"+is_plural(good_guys)+" found "+convertee+".", "\n")
             good_guys.append(convertee)
             inactive_good_guys.remove(convertee)
         elif evnt == 3 and len(inactive_bad_guys) > 0:
             convertee = random.choice(inactive_bad_guys)
-            print("  "+convertee+" emerged from the darkness.")
+            storyprint("  "+convertee+" emerged from the darkness.", "\n")
             bad_guys.append(convertee)
             inactive_bad_guys.remove(convertee)
         elif evnt == 4 and len(bad_guys) > 0:
             convertee = random.choice(bad_guys)
-            print("  "+convertee+" retreated to the shadows.")
+            storyprint("  "+convertee+" retreated to the shadows.", "\n")
             inactive_bad_guys.append(convertee)
             bad_guys.remove(convertee)
         elif evnt == 5:
             introduce(good_guys, True)
-            print("  The good guy"+is_plural(good_guys), end=" met ")
-            print(good_guys[-1]+".")
+            storyprint("  The good guy"+is_plural(good_guys)+" met "+good_guys[-1]+".", "\n")
         elif evnt == 6:
             introduce(bad_guys, True)
-            print("  "+bad_guys[-1],"emerged.")
+            storyprint("  "+bad_guys[-1],"emerged.", "\n")
         else:
             NewPlace()
-            print("  The good guy"+is_plural(good_guys)+" found themselves at "+place+".", end=" ")
+            storyprint("  The good guy"+is_plural(good_guys)+" found themselves at "+place+".", " ")
             if random.randint(0,1) == 1:
-                print("However, they were still lost.")
+                storyprint("However, they were still lost.", "\n")
             else:
                 print('')
                 break
-    print("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+"n't lost anymore.")
+    storyprint("  The good guy"+is_plural(good_guys)+" "+were_was(good_guys)+"n't lost anymore.", "\n")
 def confused():
     """Not finished yet"""
     global good_guys
@@ -2326,10 +2329,10 @@ def confused():
     global inactive_good_guys
     good_guy_check()
     """The good guys get confused in this function."""
-    print("  The good guy"+is_plural(good_guys)+" got confused.")
+    storyprint("  The good guy"+is_plural(good_guys)+" got confused.", "\n")
     if len(bad_guys) > 0:
         victim = random.choice(good_guys)
-        print(victim+" thought that "+random.choice(bad_guys)+" was his/her friend. So, he/she went on the bad guy's side.")
+        storyprint(victim+" thought that "+random.choice(bad_guys)+" was his/her friend. So, he/she went on the bad guy's side.", "\n")
         good_guys.remove(victim)
         bad_guys.append(victim)
 def pit():
@@ -2341,39 +2344,39 @@ for x in range(X2repeat+1):
     introduce(good_guys, True)
 X2repeat = random.randint(1,5) * len(good_guys)
 inventory = [random.choice(Tools) for x in range(X2repeat)]
-#test_events() #This line is temporary.
-print("  Once upon a time, there", end=" ")
+test_events() #This line is temporary.
+storyprint("  Once upon a time, there", " ")
 if len(good_guys) == 1:
-    print("was " + good_guys[0] + ".",end=" ")
+    storyprint("was " + good_guys[0] + "."," ")
     if good_guys[0].endswith("Holy Ghost"):
-        print("He/she isn't THE Holy Ghost, but a ghost that is holy.")
+        storyprint("He/she isn't THE Holy Ghost, but a ghost that is holy.", "\n")
     else:
         print('')
 else:
     b = ["good neighbors", "good guys", "heroes", "people", "good people", "neighbors"]
-    print("were " + str(len(good_guys)) +" "+ random.choice(b), end=". ")
-    list_party(good_guys, "")
+    storyprint("were " + str(len(good_guys)) +" "+ random.choice(b), ". ")
+    list_party(good_guys, "They were ")
 sentence_starts = ["They were born in ", "They lived in ", "They were going through ", "They were sent to ", "They went to ", "They were going on vacation to "]
 senStart = "  "+random.choice(sentence_starts)
 if PlaceTypes[place] == "country":
-    print(senStart + place.capitalize() + ".")
+    storyprint(senStart + place.capitalize() + ".", "\n")
 else:
-    print(senStart + place.lower() + ".")
+    storyprint(senStart + place.lower() + ".", "\n")
 if senStart == "  They were sent to ":
-    print("  Why were they sent to "+place.lower()+"?",end=" ")
+    storyprint("  Why were they sent to "+place.lower()+"?"," ")
     r = random.randint(0, 2)
     if r == 0:
-        print("Because they were being naughty. They want to find a way out of {}.".format(place.lower()))
+        storyprint("Because they were being naughty. They want to find a way out of {}.".format(place.lower()), "\n")
         goals.append("Leave " + place)
     elif r == 1:
         introduce(bad_guys, False)
         if place.lower() == "a school":
-            print("Because {} thought they were so stupid, they needed to go to school".format(inactive_bad_guys[-1]))
+            storyprint("Because {} thought they were so stupid, they needed to go to school".format(inactive_bad_guys[-1]), "\n")
         else:
-            print("Because {} kidnapped them and left them there so that they could not escape.".format(inactive_bad_guys[-1]))
+            storyprint("Because {} kidnapped them and left them there so that they could not escape.".format(inactive_bad_guys[-1]), "\n")
         goals.append("Leave " + place)
     else:
-        print('Because...')
+        storyprint('Because...', "\n")
         new_mission()
 X2repeat = random.randint(0,1)
 if len(good_guys) > 5:
@@ -2385,16 +2388,16 @@ if X2repeat > 0:
 else:
     active_vehicles = []
 if senStart == "  They were sent to ":
-    print("  They got to "+place+" by " + list_vehicles() + ".")
+    storyprint("  They got to "+place+" by " + list_vehicles() + ".", "\n")
 else:
-    print("  They got there by "+list_vehicles()+".")
+    storyprint("  They got there by "+list_vehicles()+".", "\n")
 print_inventory()
 total_bad_guys = len(inactive_bad_guys) + len(bad_guys)
 #Opening
-possible_events = ["conversation()", 'convert_character(False)', 'introduce_bad_guy()', 'good_guy_check()', 'goto()', 'print_inventory()', 'list_vehicles()', 'new_mission()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'use_item()', 'hunger()', 'lose_item()', 'trapped()', 'lost()', "new_guy()", "get_tool()", "get_vehicle()", "new_mission()", "goto()", "convert_character(False)", "print_inventory()", "introduce_bad_guy()", "list_party(good_guys, \"  The good guys here were\")", "list_vehicles()"]
+possible_events = ["Animal()","conversation()", 'convert_character(False)', 'introduce_bad_guy()', 'good_guy_check()', 'goto()', 'print_inventory()', 'list_vehicles()', 'new_mission()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'use_item()', 'hunger()', 'lose_item()', 'trapped()', 'lost()', "new_guy()", "get_tool()", "get_vehicle()", "new_mission()", "goto()", "convert_character(False)", "print_inventory()", "introduce_bad_guy()", "list_party(good_guys, \"  The good guys here were\")", "list_vehicles()"]
 while total_bad_guys == 0 and len(goals) == 0:
     if random.randint(0, 6) == 5 and len(active_vehicles) > 0 and last_list != "vehicles":
-        print("  The good guys had " + list_vehicles())
+        storyprint("  The good guys had " + list_vehicles(), "\n")
         last_list = "vehicles"
     if random.randint(0,1) == 1:
         event = random.choice(possible_events)
@@ -2407,16 +2410,19 @@ while total_bad_guys == 0 and len(goals) == 0:
     total_bad_guys = len(inactive_bad_guys) + len(bad_guys)
     vehicle_check()
 #Middle
-possible_events = ["conversation()", "goal_resolve()", "new_guy()", "get_tool()", "location_specific()", "kill_character()",  "fight(False)", "get_vehicle()", "new_mission()", "goto()", "convert_character(False)", "print_inventory()", "introduce_bad_guy()", "list_party(good_guys, \"  Our heroes were\")", 'convert_character(False)', 'kill_character()', 'fight(True)', 'introduce_bad_guy()', 'goto()', 'print_inventory()', 'list_vehicles()', 'list_party(good_guys, "  The good guys were")', 'new_mission()', 'location_specific()', 'elevator()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'goal_resolve()', 'use_item', 'destroy_vehicle()', 'hunger()', 'lose_item()', 'natural_disaster()', 'trapped()', 'lost()']
+possible_events = ["Animal()","conversation()", "goal_resolve()", "new_guy()", "get_tool()", "location_specific()", "kill_character()",  "fight(False)", "get_vehicle()", "new_mission()", "goto()", "convert_character(False)", "print_inventory()", "introduce_bad_guy()", "list_party(good_guys, \"  Our heroes were\")", 'convert_character(False)', 'kill_character()', 'fight(True)', 'introduce_bad_guy()', 'goto()', 'print_inventory()', 'list_vehicles()', 'list_party(good_guys, "  The good guys were")', 'new_mission()', 'location_specific()', 'elevator()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'goal_resolve()', 'use_item', 'destroy_vehicle()', 'hunger()', 'lose_item()', 'natural_disaster()', 'trapped()', 'lost()']
 repeatLimit = random.randint(20, 50)
 Rep = 0
 while Rep <= repeatLimit:
         if random.randint(0, 6) == 5 and len(active_vehicles) > 0 and last_list != "vehicles":
-            print("  The good guys had " + list_vehicles())
+            storyprint("  The good guys had " + list_vehicles(), "\n")
             last_list = "vehicles"
         else:
             event = random.choice(possible_events)
-            exec(event)
+            try:
+                exec(event)
+            except:
+                pass
             if not event.lower().startswith("list") or event != "print_inventory()":
                 last_list = "none"
         good_guy_check()
@@ -2425,7 +2431,7 @@ while Rep <= repeatLimit:
         total_bad_guys = len(inactive_bad_guys) + len(bad_guys)
         goal_check()
 #Closing
-possible_events = ["conversation()", 'convert_character(True)', 'kill_character()', 'fight(True)', 'good_guy_check()', 'goto()', 'print_inventory()', 'list_vehicles()', 'list_party(good_guys, "  The good guys were")', 'elevator()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'goal_check()', 'goal_resolve()', 'use_item()', 'destroy_vehicle()', 'hunger()', 'lose_item()', 'natural_disaster()', 'trapped()']
+possible_events = ["Animal()","conversation()", 'convert_character(True)', 'kill_character()', 'fight(True)', 'good_guy_check()', 'goto()', 'print_inventory()', 'list_vehicles()', 'list_party(good_guys, "  The good guys were")', 'elevator()', 'get_vehicle()', 'get_tool()', 'new_guy()', 'goal_check()', 'goal_resolve()', 'use_item()', 'destroy_vehicle()', 'hunger()', 'lose_item()', 'natural_disaster()', 'trapped()']
 chance = 2
 while total_bad_guys > 0:
     if random.randint(0,chance) > 0:
@@ -2455,10 +2461,14 @@ while len(goals) > 0:
         goal_resolve()
     else:
         event = random.choice(possible_events)
-        exec(event)
+        try:
+            exec(event)
+        except:
+            pass
         if not event.lower().startswith("list"):
                 last_list = "none"
     good_guy_check()
     vehicle_check()
     goal_check()
-input("The end. (Press [enter] to exit.)")
+storyprint("The end.", "\n")
+input("(Press [enter] to exit.)")
