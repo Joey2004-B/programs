@@ -8,7 +8,7 @@ Feel free to review any of the code in this repository. Reviews are appreciated.
 You might have to make some changes to the file before running it for the first time.
 >FOR FIRST TIME USING THIS SCRIPT: You need to first edit the path to the file this script keeps the word counts in. Please note that the script won't work properly before you configure the variable that stores the path to the file the script will store the word counts in. (The line to edit is near the top of the file, you don't need to scroll down.)
 >
->Windows path example: `'C:\\Users\\Username\\Documents\\Novel\\wordcounts.txt"`
+>Windows path example: `'C:\\Users\\Username\\Documents\\Novel\\wordcounts.txt'`
 >
 >MacOS path example: `'/Users/Username/Documents/Novel/wordcounts.txt'`
 >
