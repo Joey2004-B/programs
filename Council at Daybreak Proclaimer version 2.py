@@ -7,11 +7,14 @@ def talk(message, secs, said):
         subprocess.run(["spd-say", message.lower()])
     else:
         subprocess.run(["spd-say", said])
-    subprocess.run(["sleep", secs])
+    subprocess.run(["sleep", str(secs)])
 def clearscreen():
     subprocess.run(["clear"])
+#talk("Let's play council at daybreak!", 3, "")
 clearscreen()
+#talk("Tarantula", 2, "Guinea pig")
 runmode = 1
+print("Let's play \"Council at Daybreak!\"")
 cast = ["Catholic Celebrity", "Heretics", "Schismatic", "Cloistered Religious", "Nosy Parish Worker", "Charismatic", "Crusader", "Homeschooler", "Youth Group Kid", "Convert", "The One who Prays Lauds"]
 while runmode < 3:
     if runmode == 1:
@@ -35,7 +38,7 @@ while runmode < 3:
     input("Press [enter] to start.")
     for i, x in enumerate(cards):
         if x == "Catholic Celebrity":
-            talk("CATHOLIC CELEBRITY", 2 "Catholic celebrity")
+            talk("CATHOLIC CELEBRITY", 2, "Catholic celebrity")
             if i == 0:
                 talk("Before the night, show everyone your card. Then lay it face-down in front of you.", 5, "")
             else:
@@ -76,7 +79,7 @@ while runmode < 3:
         elif x == "The One who Prays Lauds":
             talk("THE ONE WHO PRAYS LAUDS", 2, "")
             talk("Arise and look at the card in front of you.", 4, "")
-        talk("Now, go to sleep.", 3 "")
+        talk("Now, go to sleep.", 3, "")
         clearscreen()
     talk("Now that the night is over, everyone WAKE UP!!!",5,"")
     talk("Now, let's get that heretic!",3,"")
