@@ -12,7 +12,6 @@ def clearscreen():
     subprocess.run(["clear"])
 #talk("Let's play council at daybreak!", 3, "")
 clearscreen()
-#talk("Tarantula", 2, "Guinea pig")
 runmode = 1
 print("Let's play \"Council at Daybreak!\"")
 cast = ["Catholic Celebrity", "Heretics", "Schismatic", "Cloistered Religious", "Nosy Parish Worker", "Charismatic", "Crusader", "Homeschooler", "Youth Group Kid", "Convert", "The One who Prays Lauds"]
@@ -33,9 +32,13 @@ while runmode < 3:
                     cards.append(x)
     randomizecards = input("Do you want the cards to be called at random? (y/n)")
     if randomizecards.lower().startswith("y"):
+        #print(cards)
         random.shuffle(cards)
-    clearscreen()
+        #print(cards)
     input("Press [enter] to start.")
+    clearscreen()
+    if cards[0] != "Catholic Celebrity":
+        talk("Everyone, go to sleep.", 3, "")
     for i, x in enumerate(cards):
         if x == "Catholic Celebrity":
             talk("CATHOLIC CELEBRITY", 2, "Catholic celebrity")
@@ -92,3 +95,4 @@ while runmode < 3:
             picked = True
         else:
             print("Invalid option.")
+clearscreen()
