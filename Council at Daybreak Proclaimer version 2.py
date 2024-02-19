@@ -84,4 +84,11 @@ while runmode < 3:
     talk("Now that the night is over, everyone WAKE UP!!!",5,"")
     talk("Now, let's get that heretic!",3,"")
     print("----- Enter a number to select an option from this menu. -----\n1 --------------------------- Play again with a different deck\n2 ------------------------------ Play again with the same deck\n3 ------------------------------------------------------- Quit")
-    runmode = input(">")
+    picked = False
+    while picked == False:
+        new_runmode = input(">")
+        if new_runmode == "1" or new_runmode == "2" or new_runmode == "3":
+            runmode = int(new_runmode)
+            picked = True
+        else:
+            print("Invalid option.")
