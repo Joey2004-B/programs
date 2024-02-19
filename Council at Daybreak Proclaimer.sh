@@ -50,7 +50,7 @@ echo "Everyone, go to sleep."
 spd-say "Everyone, go to sleep."
 sleep 3
 clear
-deck=("Heritics" "Schismatic" "Cloistered Religious" "Nosy Parish Worker" "Charismatic" "Crusader" "Homeschooler" "Youth Group Kid" "Convert" "The One Who Prays Lauds")
+deck=("Heretics" "Schismatic" "Cloistered Religious" "Nosy Parish Worker" "Charismatic" "Crusader" "Homeschooler" "Youth Group Kid" "Convert" "The One Who Prays Lauds")
 
 
 for person in "${deck[@]}";
@@ -58,9 +58,9 @@ do
     clear
     actiondone=0
     case $person in
-        "Heritics")
+        "Heretics")
             echo "HERITICS"
-            spd-say "Heritics"
+            spd-say "Heretics"
             sleep 2
             echo "Arise and find one another. Acknowledge each other with a silent signal."
             spd-say "Arise and find one another. Acknowledge each other with a silent signal."
@@ -71,11 +71,11 @@ do
             echo "SCHISMATIC"
             spd-say "Schismatic"
             sleep 2
-            echo "Arise. Heritics, stick out your thumb to show the Schismatic who you really are."
-            spd-say "Arise. Heritics, stick out your thumb to show the Schismatic who you really are."
+            echo "Arise. Heretics, stick out your thumb to show the Schismatic who you really are."
+            spd-say "Arise. Heretics, stick out your thumb to show the Schismatic who you really are."
             sleep 5
-            echo "If only one thumb is up, then the other Heritic card is in the middle."
-            spd-say "If only one thumb is up, then the other Heritic card is in the middle."
+            echo "If only one thumb is up, then the other Heretic card is in the middle."
+            spd-say "If only one thumb is up, then the other Heretic card is in the middle."
             sleep 3
             actiondone=1
             fi;;
@@ -188,11 +188,11 @@ clear
 echo "Now that the night is over, everybody WAKE UP!!!"
 spd-say "Now that the night is over, everybody wake up!"
 sleep 5
-echo Now,\ let\'s\ get\ that\ heritic!
-spd-say Now,\ let\'s\ get\ that\ heritic!
+echo Now,\ let\'s\ get\ that\ heretic!
+spd-say Now,\ let\'s\ get\ that\ heretic!
 echo "----- Enter a number to select an option from this menu. -----"
-echo "1 - Play again with a different deck"
-echo "2 - Play again with the same deck"
-echo "3 - Quit"
+echo "1 --------------------------- Play again with a different deck"
+echo "2 ------------------------------ Play again with the same deck"
+echo "3 ------------------------------------------------------- Quit"
 read -p ">" runmode
 done
