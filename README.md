@@ -27,8 +27,7 @@ You might have to make some changes to the file before running it for the first 
 - `update` command is the most used one. It first asks the user which word count you want to change. Then, it will ask what's the new word count for that chapter.
 - `quit` command exits the program. It asks if you really want to leave. If you type in `y`, then the script finishes.
  ## Story Generator
- >Not uploaded yet
- I need to fix some bugs on this one.
+ > I need to fix some bugs on this one.
 
  This program is what you'll get if you combine Mad Libs with Rory Story Cubes or Storytime Dice.
  - It randomly generates stories.
@@ -59,6 +58,8 @@ Before I add this script to my repository, I have to fix these bugs. Please let 
  This is a command-line interface tool that creates and edits CSV files.
  You type in commands to use it. It displays the contents of the CSV file you're working on in a neat table.
  
- ## And maybe more.
-- example.py file (I had to make it for doing a QwikLab exercise on a course on using Git and GitHub. I might have to delete it some day).
-- *Council at Daybreak* Proclaimer (This is a Bash script. I recommend [am I spelling this word right?] using Linux for this. You'll need to install the `speach-dispatcher` package as well as having the *Council at Daybreak* card game.)
+ ##  *Council at Daybreak* Proclaimer
+ I recommend [am I spelling this word right?] using Linux for this. You'll need to install the `speach-dispatcher` package as well as having the *Council at Daybreak* card game. But I'm looking into making this script work in Windows.
+
+ ## Unused KDE Style Lister
+ I made this script because I love to make KDE global themes. I would like to make global themes that use all the different styles I've got installed on my Kubuntu system. I got so many different Icon styles, cursors, window decorations, etc. that it was hard for me to keep track of which ones weren't used. So I made this nifty script. If you have a KDE-based Linux distribution (Kubuntu works best because it's the distribution I use.) distribution and are interested in making global themes that use all of the styles installed, try it out.
